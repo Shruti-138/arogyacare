@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { prisma } from "../../lib/prisma";
 import { getSession } from "../../lib/session";
 import { signOut } from "../actions";
@@ -27,7 +27,7 @@ export default async function Header() {
                 My appointments
               </Link>
             )}
-            <span className="text-gray-700">Hello, {user.name}</span>
+            {user.role === "DOCTOR" && (<Link href="/dashboard" className="text-teal-700 hover:underline">Dashboard</Link>)}<span className="text-gray-700">Hello, {user.name}</span>
             <form action={signOut}>
               <button
                 type="submit"
