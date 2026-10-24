@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "../../lib/prisma";
 import { getSession } from "../../lib/session";
 import { TZ, formatDayLabel, formatTime, timeOf } from "../../lib/slots";
-import { completeAppointment } from "./actions";
+import { completeAppointment, savePrescription } from "./actions";
 
 function dateOf(d: Date) {
   return d.toLocaleDateString("en-CA", { timeZone: TZ });
@@ -41,6 +41,7 @@ async function DoctorDashboard() {
           user: { select: { name: true } },
         },
       },
+      prescription: { select: { medicines: true, notes: true } },
     },
     orderBy: { startsAt: "asc" },
   });
@@ -115,6 +116,45 @@ async function DoctorDashboard() {
                 {formatDayLabel(dateOf(a.startsAt))} at{" "}
                 {formatTime(timeOf(a.startsAt))}
               </p>
+
+              {a.prescription ? (
+                <div className="mt-3 rounded-lg bg-teal-50 p-3 text-sm text-gray-800">
+                  <p className="font-semibold text-teal-700">Prescription</p>
+                  <p className="mt-1 whitespace-pre-line">
+                    {a.prescription.medicines}
+                  </p>
+                  {a.prescription.notes && (
+                    <p className="mt-2 whitespace-pre-line text-gray-600">
+                      Notes: {a.prescription.notes}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <form action={savePrescription} className="mt-3 space-y-2">
+                  <input type="hidden" name="appointmentId" value={a.id} />
+                  <textarea
+                    name="medicines"
+                    required
+                    minLength={2}
+                    maxLength={2000}
+                    rows={3}
+                    placeholder="Medicines, dose and duration (one per line)"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
+                  />
+                  <input
+                    name="notes"
+                    maxLength={1000}
+                    placeholder="Notes (optional)"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
+                  />
+                  <button
+                    type="submit"
+                    className="rounded-lg bg-teal-700 px-3 py-2 text-sm text-white hover:bg-teal-800"
+                  >
+                    Save prescription
+                  </button>
+                </form>
+              )}
             </div>
           ))}
         </div>

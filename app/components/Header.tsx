@@ -27,7 +27,7 @@ export default async function Header() {
                 My appointments
               </Link>
             )}
-            {user.role === "DOCTOR" && (<Link href="/dashboard" className="text-teal-700 hover:underline">Dashboard</Link>)}<span className="text-gray-700">Hello, {user.name}</span>
+            {user.role === "DOCTOR" && (<Link href="/dashboard" className="text-teal-700 hover:underline">Dashboard</Link>)}{user.role === "PATIENT" && (<Link href="/prescriptions" className="text-teal-700 hover:underline">Prescriptions</Link>)}<span className="text-gray-700">Hello, {user.name}</span>
             <form action={signOut}>
               <button
                 type="submit"
@@ -54,3 +54,4 @@ export default async function Header() {
     </header>
   );
 }
+
