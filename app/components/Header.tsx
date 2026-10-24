@@ -1,5 +1,3 @@
-
-
 import Link from "next/link";
 import { prisma } from "../../lib/prisma";
 import { getSession } from "../../lib/session";
@@ -11,7 +9,7 @@ export default async function Header() {
   const user = session
     ? await prisma.user.findUnique({
         where: { id: session.userId },
-        select: { name: true },
+        select: { name: true, role: true },
       })
     : null;
 
@@ -24,6 +22,11 @@ export default async function Header() {
 
         {user ? (
           <div className="flex items-center gap-4 text-sm">
+            {user.role === "PATIENT" && (
+              <Link href="/appointments" className="text-teal-700 hover:underline">
+                My appointments
+              </Link>
+            )}
             <span className="text-gray-700">Hello, {user.name}</span>
             <form action={signOut}>
               <button
