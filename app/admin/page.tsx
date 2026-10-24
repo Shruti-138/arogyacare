@@ -1,5 +1,5 @@
-import { Suspense } from "react";
-import { redirect } from "next/navigation";
+﻿import { Suspense } from "react";
+import Link from "next/link"; import { redirect } from "next/navigation";
 import { prisma } from "../../lib/prisma";
 import { getSession } from "../../lib/session";
 import { TZ, formatDayLabel, formatTime, timeOf } from "../../lib/slots";
@@ -110,7 +110,7 @@ async function AdminDashboard() {
         <StatCard label="Completed" value={completed} />
       </div>
 
-      <h2 className="mt-10 text-xl font-semibold">Doctors</h2>
+      <div className="mt-10 flex items-center justify-between"><h2 className="text-xl font-semibold">Doctors</h2><Link href="/admin/doctors/new" className="rounded-lg bg-teal-700 px-3 py-2 text-sm text-white hover:bg-teal-800">Add doctor</Link></div>
       <div className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">
           <thead className="border-b border-gray-200 bg-gray-50 text-gray-600">
