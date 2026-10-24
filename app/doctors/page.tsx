@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+﻿import { Suspense } from "react";
 import Link from "next/link";
 import { prisma } from "../../lib/prisma";
 
@@ -93,7 +93,7 @@ async function DoctorsContent({ searchParams }: { searchParams: SearchParams }) 
               key={doctor.id}
               className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
             >
-              <h3 className="text-lg font-semibold">{doctor.user.name}</h3>
+              <h3 className="text-lg font-semibold"><Link href={`/doctors/${doctor.id}`} className="hover:underline">{doctor.user.name}</Link></h3>
               <p className="text-teal-700">{doctor.specialty}</p>
               <p className="mt-2 text-sm text-gray-600">
                 {doctor.experienceYears} years of experience
