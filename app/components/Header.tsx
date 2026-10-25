@@ -9,13 +9,16 @@ import {
 } from "lucide-react";
 import { prisma } from "../../lib/prisma";
 import { getSession } from "../../lib/session";
+import { getT } from "../../lib/i18n";
 import { signOut } from "../actions";
 import Logo from "./Logo";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const linkClass =
   "flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-teal-50 hover:text-teal-700";
 
 export default async function Header() {
+  const { locale, t } = await getT();
   const session = await getSession();
 
   const user = session
@@ -30,43 +33,44 @@ export default async function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-teal-100 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
-        <Logo />
+        <Logo tagline={t("tagline")} />
 
         <nav className="flex flex-wrap items-center gap-1">
           <Link href="/doctors" className={linkClass}>
             <Stethoscope className="h-4 w-4" />
-            Doctors
+            {t("nav_doctors")}
           </Link>
           {user?.role === "PATIENT" && (
             <>
               <Link href="/appointments" className={linkClass}>
                 <CalendarDays className="h-4 w-4" />
-                My appointments
+                {t("nav_appointments")}
               </Link>
               <Link href="/prescriptions" className={linkClass}>
                 <Pill className="h-4 w-4" />
-                Prescriptions
+                {t("nav_prescriptions")}
               </Link>
             </>
           )}
           {user?.role === "DOCTOR" && (
             <Link href="/dashboard" className={linkClass}>
               <LayoutDashboard className="h-4 w-4" />
-              Dashboard
+              {t("nav_dashboard")}
             </Link>
           )}
           {user?.role === "ADMIN" && (
             <Link href="/admin" className={linkClass}>
               <ShieldCheck className="h-4 w-4" />
-              Admin
+              {t("nav_admin")}
             </Link>
           )}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <LanguageSwitcher locale={locale} />
           {user ? (
             <>
-              <span className="hidden items-center gap-2 sm:flex">
+              <span className="hidden items-center gap-2 lg:flex">
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-800">
                   {initial}
                 </span>
@@ -80,7 +84,7 @@ export default async function Header() {
                   className="flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
                 >
                   <LogOut className="h-4 w-4" />
-                  Sign out
+                  {t("sign_out")}
                 </button>
               </form>
             </>
@@ -90,13 +94,13 @@ export default async function Header() {
                 href="/login"
                 className="rounded-lg px-3 py-2 text-sm font-medium text-teal-700 hover:bg-teal-50"
               >
-                Sign in
+                {t("sign_in")}
               </Link>
               <Link
                 href="/register"
                 className="rounded-lg bg-gradient-to-r from-teal-600 to-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-emerald-600"
               >
-                Register
+                {t("register")}
               </Link>
             </>
           )}
