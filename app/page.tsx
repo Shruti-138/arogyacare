@@ -5,25 +5,31 @@ import {
   Accessibility,
   Activity,
   Apple,
+  ArrowRight,
   Baby,
   Bean,
   Bone,
   Brain,
   Building2,
   CalendarCheck,
+  CalendarDays,
   ClipboardCheck,
   Dog,
   Droplet,
   Droplets,
   Ear,
   Eye,
+  FileText,
   FlaskConical,
   Hand,
+  Heart,
   HeartPulse,
+  Lock,
   Pill,
   Ribbon,
   Scissors,
   Search,
+  ShieldCheck,
   Stethoscope,
   Syringe,
   User,
@@ -66,6 +72,19 @@ const SPECIALTIES: { key: string; Icon: LucideIcon; color: string }[] = [
   { key: "Urology", Icon: Droplets, color: "bg-violet-50 text-violet-500" },
 ];
 
+const QUICK = [
+  { Icon: Stethoscope, color: "bg-emerald-100 text-emerald-700", href: "/doctors", title: "q1_title", desc: "q1_desc" },
+  { Icon: CalendarDays, color: "bg-sky-100 text-sky-600", href: "/doctors", title: "q2_title", desc: "q2_desc" },
+  { Icon: FileText, color: "bg-violet-100 text-violet-600", href: "/prescriptions", title: "q3_title", desc: "q3_desc" },
+  { Icon: User, color: "bg-rose-100 text-rose-500", href: "/appointments", title: "q4_title", desc: "q4_desc" },
+] as const;
+
+const TRUST = [
+  { Icon: ShieldCheck, title: "trust_1_title", desc: "trust_1_desc" },
+  { Icon: Lock, title: "trust_2_title", desc: "trust_2_desc" },
+  { Icon: CalendarCheck, title: "trust_3_title", desc: "trust_3_desc" },
+] as const;
+
 const ROLES = [
   {
     Icon: User,
@@ -98,39 +117,117 @@ async function HomeContent() {
 
   return (
     <main>
-      <section className="bg-gradient-to-b from-emerald-50 via-white to-sky-50">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 md:py-20">
-          <div>
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-sky-50">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 pb-6 pt-12 sm:px-6 md:py-24">
+          <div className="max-w-xl md:max-w-[46%]">
             <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-800">
-              <HeartPulse className="h-4 w-4" />
-              {t("tagline")}
+              <Heart className="h-3.5 w-3.5" />
+              {t("badge")}
             </span>
-            <h1 className="mt-4 text-3xl font-extrabold leading-snug text-slate-900 sm:text-4xl lg:text-5xl">
-              {t("hero_title")}
+            <h1 className="mt-5 text-4xl font-extrabold leading-tight text-teal-900 sm:text-5xl">
+              {t("hero2_title")}
             </h1>
             <p className="mt-4 text-lg leading-relaxed text-slate-600">
-              {t("hero_sub")}
+              {t("hero2_sub")}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/doctors"
-                className="rounded-xl bg-gradient-to-r from-teal-600 to-emerald-500 px-6 py-3 font-semibold text-white shadow-md hover:from-teal-700 hover:to-emerald-600"
+                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-teal-600 to-emerald-500 px-6 py-3 font-semibold text-white shadow-md hover:from-teal-700 hover:to-emerald-600"
               >
+                <Search className="h-4 w-4" />
                 {t("cta_find")}
               </Link>
               <Link
-                href="/register"
-                className="rounded-xl border border-teal-600 bg-white px-6 py-3 font-semibold text-teal-700 hover:bg-teal-50"
+                href="/#services"
+                className="flex items-center gap-2 rounded-lg border border-emerald-500 bg-white px-6 py-3 font-semibold text-emerald-700 hover:bg-emerald-50"
               >
-                {t("cta_account")}
+                {t("cta_explore")}
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
-          <HeroIllustration />
+        </div>
+
+        <div className="relative h-72 md:absolute md:inset-y-0 md:right-0 md:h-auto md:w-1/2">
+          <div className="absolute inset-0 flex items-end justify-center bg-emerald-100/50 px-6">
+            <HeroIllustration />
+          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/hero-doctor.jpg"
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover object-top"
+          />
+          <div className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-emerald-50 via-emerald-50/30 to-transparent md:block" />
+
+          <div className="absolute right-3 top-4 flex items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-lg md:right-10 md:top-14">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+              <CalendarDays className="h-5 w-5" />
+            </span>
+            <span className="text-sm font-medium text-slate-700">
+              {t("float_1")}
+            </span>
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+          </div>
+          <div className="absolute bottom-4 right-3 flex items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-lg md:bottom-16 md:right-6">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+              <User className="h-5 w-5" />
+            </span>
+            <span className="text-sm font-medium text-slate-700">
+              {t("float_2")}
+            </span>
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+      <section className="relative z-10 mx-auto max-w-7xl px-4 pb-4 pt-6 sm:px-6 md:-mt-10 md:pt-0">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {QUICK.map((c) => (
+            <Link
+              key={c.title}
+              href={c.href}
+              className="group flex flex-col rounded-2xl bg-white p-5 shadow-md ring-1 ring-slate-100 transition hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              <span
+                className={`flex h-12 w-12 items-center justify-center rounded-full ${c.color}`}
+              >
+                <c.Icon className="h-6 w-6" />
+              </span>
+              <h3 className="mt-4 font-bold text-slate-900">{t(c.title)}</h3>
+              <p className="mt-1 flex-1 text-sm text-slate-500">{t(c.desc)}</p>
+              <ArrowRight className="mt-3 h-4 w-4 self-end text-emerald-600 transition group-hover:translate-x-1" />
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-10 bg-emerald-50/60">
+        <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+          <h2 className="text-center text-xl font-bold text-teal-900 sm:text-2xl">
+            {t("trust_title")}
+          </h2>
+          <div className="mt-8 grid gap-6 md:grid-cols-3 md:gap-0 md:divide-x md:divide-emerald-100">
+            {TRUST.map(({ Icon, title, desc }) => (
+              <div
+                key={title}
+                className="flex items-center gap-3 md:justify-center md:px-4"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="text-sm font-bold text-slate-900">{t(title)}</p>
+                  <p className="text-xs text-slate-500">{t(desc)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="about" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-14 sm:px-6">
         <div className="grid gap-5 md:grid-cols-3">
           {ROLES.map((role) => (
             <div
@@ -158,7 +255,7 @@ async function HomeContent() {
         </div>
       </section>
 
-      <section className="bg-gradient-to-b from-white to-emerald-50/60">
+      <section id="services" className="scroll-mt-24 bg-gradient-to-b from-white to-emerald-50/60">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
           <h2 className="text-center text-2xl font-bold text-slate-900 sm:text-3xl">
             {t("specialties_title")}
