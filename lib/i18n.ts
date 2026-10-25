@@ -2,6 +2,9 @@
 import { common } from "./messages/common";
 import { home } from "./messages/home";
 import { landing } from "./messages/landing";
+import { sections } from "./messages/sections";
+import { sections2 } from "./messages/sections2";
+import { sections3 } from "./messages/sections3";
 
 export const LOCALES = [
   { code: "en", label: "English" },
@@ -13,7 +16,14 @@ export type Locale = (typeof LOCALES)[number]["code"];
 
 export const LANG_COOKIE = "arogya_lang";
 
-const messages = { ...common, ...home, ...landing };
+const messages = {
+  ...common,
+  ...home,
+  ...landing,
+  ...sections,
+  ...sections2,
+  ...sections3,
+};
 
 export type MessageKey = keyof typeof messages;
 

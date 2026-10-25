@@ -39,6 +39,8 @@ import {
   Wind,
 } from "lucide-react";
 import { getT } from "../lib/i18n";
+import Network from "./components/Network";
+import HowItWorks from "./components/HowItWorks";
 import { specialtyNames } from "../lib/messages/home";
 import {
   ConsultIllustration,
@@ -226,34 +228,8 @@ async function HomeContent() {
           </div>
         </div>
       </section>
-
-      <section id="about" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-14 sm:px-6">
-        <div className="grid gap-5 md:grid-cols-3">
-          {ROLES.map((role) => (
-            <div
-              key={role.title}
-              className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm"
-            >
-              <span
-                className={`flex h-12 w-12 items-center justify-center rounded-xl ${role.color}`}
-              >
-                <role.Icon className="h-6 w-6" />
-              </span>
-              <h2 className="mt-4 text-lg font-bold text-slate-900">
-                {t(role.title)}
-              </h2>
-              <ul className="mt-3 space-y-2 text-sm text-slate-600">
-                {role.points.map((p) => (
-                  <li key={p} className="flex gap-2">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
-                    <span>{t(p)}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
+      <Network />
+      <HowItWorks />
 
       <section id="services" className="scroll-mt-24 bg-gradient-to-b from-white to-emerald-50/60">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
@@ -318,28 +294,6 @@ async function HomeContent() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-        <h2 className="text-center text-2xl font-bold text-slate-900 sm:text-3xl">
-          {t("how_title")}
-        </h2>
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {STEPS.map(({ Icon, key }, i) => (
-            <div
-              key={key}
-              className="flex items-center gap-4 rounded-2xl border border-slate-100 bg-white p-5 shadow-sm"
-            >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-teal-600 to-emerald-500 text-white">
-                <Icon className="h-6 w-6" />
-              </span>
-              <div>
-                <p className="text-xs font-bold text-emerald-600">{i + 1}</p>
-                <p className="font-semibold text-slate-800">{t(key)}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <section className="px-4 pb-14 sm:px-6">
         <div className="mx-auto max-w-6xl rounded-3xl bg-gradient-to-r from-teal-700 to-emerald-500 px-6 py-10 text-center text-white shadow-lg">
           <h2 className="text-2xl font-bold sm:text-3xl">{t("cta_title")}</h2>
@@ -376,3 +330,4 @@ export default function Home() {
     </Suspense>
   );
 }
+
