@@ -2,8 +2,9 @@
 
 import { redirect } from "next/navigation";
 import { prisma } from "../../../lib/prisma";
+import { sendMail } from "../../../lib/mail";
 import { getSession } from "../../../lib/session";
-import { generateSlots, toDate } from "../../../lib/slots";
+import { formatDayLabel, formatTime, generateSlots, toDate } from "../../../lib/slots";
 
 export type BookState = { error?: string } | null;
 
@@ -23,6 +24,7 @@ export async function bookAppointment(
 
   const patient = await prisma.patient.findUnique({
     where: { userId: session.userId },
+    select: { id: true, user: { select: { name: true, email: true } } },
   });
   if (!patient) return { error: "Patient profile not found." };
 
@@ -33,6 +35,8 @@ export async function bookAppointment(
   const doctor = await prisma.doctor.findUnique({
     where: { id: doctorId },
     select: {
+      user: { select: { name: true } },
+      hospital: { select: { name: true } },
       availabilities: {
         select: {
           dayOfWeek: true,
@@ -66,6 +70,25 @@ export async function bookAppointment(
   } catch {
     return { error: "Sorry, this slot was just booked. Please pick another." };
   }
+
+  await sendMail({
+    to: patient.user.email,
+    subject: `Appointment confirmed with ${doctor.user.name}`,
+    text: [
+      `Hello ${patient.user.name},`,
+      "",
+      "Your appointment is confirmed.",
+      "",
+      `Doctor:   ${doctor.user.name}`,
+      `Hospital: ${doctor.hospital.name}`,
+      `Date:     ${formatDayLabel(date)}`,
+      `Time:     ${formatTime(time)} (IST)`,
+      "",
+      "To cancel, sign in and open My appointments.",
+      "",
+      "ArogyaCare - Care That Connects",
+    ].join("\n"),
+  });
 
   redirect(`/doctors/${doctorId}?date=${date}&booked=${time}`);
 }
