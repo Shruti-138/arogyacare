@@ -5,6 +5,7 @@ import { landing } from "./messages/landing";
 import { sections } from "./messages/sections";
 import { sections2 } from "./messages/sections2";
 import { sections3 } from "./messages/sections3";
+import { design } from "./messages/design";
 
 export const LOCALES = [
   { code: "en", label: "English" },
@@ -23,6 +24,7 @@ const messages = {
   ...sections,
   ...sections2,
   ...sections3,
+  ...design,
 };
 
 export type MessageKey = keyof typeof messages;

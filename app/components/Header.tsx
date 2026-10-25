@@ -1,21 +1,12 @@
 ﻿import Link from "next/link";
-import {
-  CalendarDays,
-  LayoutDashboard,
-  LogOut,
-  Pill,
-  ShieldCheck,
-  Stethoscope,
-} from "lucide-react";
+import { CalendarCheck, LogOut } from "lucide-react";
 import { prisma } from "../../lib/prisma";
 import { getSession } from "../../lib/session";
 import { getT } from "../../lib/i18n";
 import { signOut } from "../actions";
 import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
-
-const linkClass =
-  "flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-teal-50 hover:text-teal-700";
+import NavLink from "./NavLink";
 
 export default async function Header() {
   const { locale, t } = await getT();
@@ -28,84 +19,95 @@ export default async function Header() {
       })
     : null;
 
-  const initial = user ? user.name.replace("Dr. ", "").charAt(0).toUpperCase() : "";
+  const links = [{ href: "/doctors", label: t("nav_doctors") }];
+  if (!user) {
+    links.push(
+      { href: "/#how-it-works", label: t("hiw_badge") },
+      { href: "/#features", label: t("feat_badge") },
+      { href: "/#faq", label: t("faq_badge") },
+      { href: "/#contact", label: t("contact_badge") }
+    );
+  }
+  if (user?.role === "PATIENT") {
+    links.push(
+      { href: "/appointments", label: t("nav_appointments") },
+      { href: "/prescriptions", label: t("nav_prescriptions") }
+    );
+  }
+  if (user?.role === "DOCTOR") {
+    links.push({ href: "/dashboard", label: t("nav_dashboard") });
+  }
+  if (user?.role === "ADMIN") {
+    links.push({ href: "/admin", label: t("nav_admin") });
+  }
+
+  const showBook = !user || user.role === "PATIENT";
+  const initial = user
+    ? user.name.replace("Dr. ", "").charAt(0).toUpperCase()
+    : "";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-teal-100 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
+    <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/95 backdrop-blur">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Logo tagline={t("tagline")} />
 
-        <nav className="flex flex-wrap items-center gap-1">
-          <Link href="/doctors" className={linkClass}>
-            <Stethoscope className="h-4 w-4" />
-            {t("nav_doctors")}
-          </Link>
-          {user?.role === "PATIENT" && (
-            <>
-              <Link href="/appointments" className={linkClass}>
-                <CalendarDays className="h-4 w-4" />
-                {t("nav_appointments")}
-              </Link>
-              <Link href="/prescriptions" className={linkClass}>
-                <Pill className="h-4 w-4" />
-                {t("nav_prescriptions")}
-              </Link>
-            </>
-          )}
-          {user?.role === "DOCTOR" && (
-            <Link href="/dashboard" className={linkClass}>
-              <LayoutDashboard className="h-4 w-4" />
-              {t("nav_dashboard")}
-            </Link>
-          )}
-          {user?.role === "ADMIN" && (
-            <Link href="/admin" className={linkClass}>
-              <ShieldCheck className="h-4 w-4" />
-              {t("nav_admin")}
-            </Link>
-          )}
+        <nav className="hidden items-center gap-8 xl:flex">
+          {links.map((l) => (
+            <NavLink key={l.href} href={l.href}>
+              {l.label}
+            </NavLink>
+          ))}
         </nav>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-3">
           <LanguageSwitcher locale={locale} />
           {user ? (
             <>
-              <span className="hidden items-center gap-2 lg:flex">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-800">
+              <span className="hidden items-center gap-2 2xl:flex">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e3f6f2] text-sm font-bold text-[#0d8f82]">
                   {initial}
                 </span>
-                <span className="text-sm font-medium text-slate-700">
+                <span className="text-sm font-medium text-[#0a1f44]">
                   {user.name}
                 </span>
               </span>
               <form action={signOut}>
                 <button
                   type="submit"
-                  className="flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                  className="flex items-center gap-1.5 text-sm font-semibold text-[#0a1f44] hover:text-[#0d8f82]"
                 >
                   <LogOut className="h-4 w-4" />
-                  {t("sign_out")}
+                  <span className="hidden sm:inline">{t("sign_out")}</span>
                 </button>
               </form>
             </>
           ) : (
-            <>
-              <Link
-                href="/login"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-teal-700 hover:bg-teal-50"
-              >
-                {t("sign_in")}
-              </Link>
-              <Link
-                href="/register"
-                className="rounded-lg bg-gradient-to-r from-teal-600 to-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-emerald-600"
-              >
-                {t("register")}
-              </Link>
-            </>
+            <Link
+              href="/login"
+              className="hidden text-sm font-semibold text-[#0a1f44] hover:text-[#0d8f82] sm:inline"
+            >
+              {t("sign_in")}
+            </Link>
+          )}
+          {showBook && (
+            <Link
+              href="/doctors"
+              className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#0fa596] to-[#0a5aa0] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 hover:opacity-95"
+            >
+              <CalendarCheck className="h-4 w-4" />
+              <span className="hidden sm:inline">{t("book_appointment")}</span>
+            </Link>
           )}
         </div>
       </div>
+
+      <nav className="flex items-center gap-6 overflow-x-auto border-t border-slate-100 px-4 py-2.5 sm:px-6 xl:hidden">
+        {links.map((l) => (
+          <NavLink key={l.href} href={l.href}>
+            {l.label}
+          </NavLink>
+        ))}
+      </nav>
     </header>
   );
 }
