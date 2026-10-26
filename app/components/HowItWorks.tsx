@@ -1,45 +1,45 @@
-﻿import { CalendarCheck, ClipboardCheck, Search, UserPlus } from "lucide-react";
-import { getT } from "../../lib/i18n";
+﻿import { getT } from "../../lib/i18n";
 
 const STEPS = [
-  { Icon: UserPlus, tone: "bg-emerald-100 text-emerald-700", title: "hiw_1_title", desc: "hiw_1_desc" },
-  { Icon: Search, tone: "bg-sky-100 text-sky-700", title: "hiw_2_title", desc: "hiw_2_desc" },
-  { Icon: CalendarCheck, tone: "bg-teal-100 text-teal-700", title: "hiw_3_title", desc: "hiw_3_desc" },
-  { Icon: ClipboardCheck, tone: "bg-violet-100 text-violet-700", title: "hiw_4_title", desc: "hiw_4_desc" },
+  { n: "01", title: "hiw_1_title", desc: "hiw_1_desc" },
+  { n: "02", title: "hiw_2_title", desc: "hiw_2_desc" },
+  { n: "03", title: "hiw_3_title", desc: "hiw_3_desc" },
+  { n: "04", title: "hiw_4_title", desc: "hiw_4_desc" },
 ] as const;
 
 export default async function HowItWorks() {
   const { t } = await getT();
 
   return (
-    <section className="bg-gradient-to-b from-emerald-50/60 to-white">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="inline-block rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-sky-800">
+    <section
+      id="how-it-works"
+      className="scroll-mt-24 bg-gradient-to-b from-[#eaf7f5] to-white"
+    >
+      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+        <div className="mx-auto max-w-3xl text-center">
+          <span className="inline-block rounded-full bg-[#d5f1ec] px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#0d8f82] sm:text-sm">
             {t("hiw_badge")}
           </span>
-          <h2 className="mt-4 text-3xl font-extrabold text-teal-900 sm:text-4xl">
+          <h2 className="mt-6 text-4xl font-extrabold text-[#0a1f44] sm:text-5xl">
             {t("hiw_title")}
           </h2>
-          <p className="mt-3 text-lg text-slate-600">{t("hiw_sub")}</p>
+          <p className="mt-4 text-lg text-slate-500">{t("hiw_sub")}</p>
         </div>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {STEPS.map(({ Icon, tone, title, desc }, i) => (
-            <div
-              key={title}
-              className="relative rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-100"
-            >
-              <span className="absolute right-4 top-3 text-4xl font-extrabold text-slate-100">
-                {i + 1}
+        <div className="mt-16 grid gap-x-6 gap-y-12 sm:grid-cols-2 xl:grid-cols-4">
+          {STEPS.map((s) => (
+            <div key={s.n} className="relative">
+              <span className="absolute -top-6 left-6 z-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#0a2a5c] text-lg font-extrabold text-white shadow-lg">
+                {s.n}
               </span>
-              <span
-                className={`flex h-12 w-12 items-center justify-center rounded-xl ${tone}`}
-              >
-                <Icon className="h-6 w-6" />
-              </span>
-              <h3 className="mt-4 font-bold text-slate-900">{t(title)}</h3>
-              <p className="mt-1 text-sm text-slate-500">{t(desc)}</p>
+              <div className="h-full rounded-3xl bg-white px-6 pb-8 pt-12 shadow-lg shadow-slate-200/60 ring-1 ring-slate-100">
+                <h3 className="text-2xl font-extrabold leading-snug text-[#0a1f44]">
+                  {t(s.title)}
+                </h3>
+                <p className="mt-3 text-base leading-relaxed text-slate-500">
+                  {t(s.desc)}
+                </p>
+              </div>
             </div>
           ))}
         </div>
