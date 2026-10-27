@@ -1,53 +1,91 @@
 ﻿import { Suspense } from "react";
-import Link from "next/link"; import { redirect } from "next/navigation";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import type { LucideIcon } from "lucide-react";
+import {
+  CalendarDays,
+  CheckCircle2,
+  Clock,
+  Stethoscope,
+  Users,
+} from "lucide-react";
 import { prisma } from "../../lib/prisma";
 import { getSession } from "../../lib/session";
-import { TZ, formatDayLabel, formatTime, timeOf } from "../../lib/slots";
+import { getLocale } from "../../lib/i18n";
+import { TZ, formatTime, timeOf } from "../../lib/slots";
+import { dayLabel } from "../../lib/dates";
+import { pages4 } from "../../lib/messages/pages4";
+import { pages5 } from "../../lib/messages/pages5";
+import { specialtyNames } from "../../lib/messages/home";
+import PageHeader from "../components/PageHeader";
 
 function dateOf(d: Date) {
   return d.toLocaleDateString("en-CA", { timeZone: TZ });
 }
 
-const statusStyle: Record<string, string> = {
-  PENDING: "bg-yellow-100 text-yellow-800",
-  CONFIRMED: "bg-blue-100 text-blue-800",
-  COMPLETED: "bg-green-100 text-green-800",
-  CANCELLED: "bg-gray-100 text-gray-700",
-};
+const STATUS = {
+  PENDING: { key: "st_pending", style: "bg-yellow-100 text-yellow-800" },
+  CONFIRMED: { key: "st_confirmed", style: "bg-blue-100 text-blue-800" },
+  COMPLETED: { key: "st_completed", style: "bg-emerald-100 text-emerald-800" },
+  CANCELLED: { key: "st_cancelled", style: "bg-slate-100 text-slate-600" },
+} as const;
 
-function StatCard({ label, value }: { label: string; value: number }) {
+function StatCard({
+  Icon,
+  label,
+  value,
+}: {
+  Icon: LucideIcon;
+  label: string;
+  value: number;
+}) {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-      <p className="text-sm text-gray-600">{label}</p>
-      <p className="mt-1 text-3xl font-bold text-teal-700">{value}</p>
+    <div className="rounded-3xl bg-white p-5 shadow-lg shadow-slate-200/60 ring-1 ring-slate-100">
+      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#d5f1ec] text-[#0d8f82]">
+        <Icon className="h-6 w-6" />
+      </span>
+      <p className="mt-4 text-3xl font-extrabold text-[#0a1f44]">{value}</p>
+      <p className="mt-1 text-sm font-medium text-slate-500">{label}</p>
     </div>
   );
 }
 
 async function AdminDashboard() {
+  const locale = await getLocale();
+  const tr = (k: keyof typeof pages5) => pages5[k][locale];
+
   const session = await getSession();
   if (!session) redirect("/login");
 
+  const admin =
+    session.role === "ADMIN"
+      ? await prisma.user.findUnique({
+          where: { id: session.userId },
+          select: {
+            hospitalId: true,
+            hospital: { select: { name: true, city: true } },
+          },
+        })
+      : null;
+
   if (session.role !== "ADMIN") {
     return (
-      <p className="mt-4 text-gray-600">
-        The admin dashboard is only for hospital admin accounts.
-      </p>
+      <>
+        <PageHeader title={tr("admin_title")} />
+        <p className="mx-auto mt-8 max-w-5xl rounded-2xl bg-white p-6 text-slate-500 shadow-sm ring-1 ring-slate-100">
+          {tr("only_admins")}
+        </p>
+      </>
     );
   }
-
-  const admin = await prisma.user.findUnique({
-    where: { id: session.userId },
-    select: {
-      hospitalId: true,
-      hospital: { select: { name: true, city: true } },
-    },
-  });
   if (!admin?.hospitalId || !admin.hospital) {
     return (
-      <p className="mt-4 text-gray-600">
-        Your account is not linked to a hospital.
-      </p>
+      <>
+        <PageHeader title={tr("admin_title")} />
+        <p className="mx-auto mt-8 max-w-5xl rounded-2xl bg-white p-6 text-slate-500 shadow-sm ring-1 ring-slate-100">
+          {tr("no_hospital")}
+        </p>
+      </>
     );
   }
 
@@ -96,93 +134,121 @@ async function AdminDashboard() {
       }),
     ]);
 
+  const th = "px-5 py-4 text-xs font-bold uppercase tracking-[0.12em] text-slate-500";
+
   return (
     <>
-      <p className="mt-1 text-gray-600">
-        {admin.hospital.name}, {admin.hospital.city}
-      </p>
+      <PageHeader
+        title={tr("admin_title")}
+        sub={`${admin.hospital.name}, ${admin.hospital.city ?? ""}`}
+      />
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+          <StatCard Icon={Stethoscope} label={tr("stat_doctors")} value={doctorCount} />
+          <StatCard Icon={Users} label={tr("stat_patients")} value={patientRows.length} />
+          <StatCard Icon={CalendarDays} label={tr("stat_total")} value={total} />
+          <StatCard Icon={Clock} label={tr("stat_upcoming")} value={upcoming} />
+          <StatCard Icon={CheckCircle2} label={tr("stat_completed")} value={completed} />
+        </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-5">
-        <StatCard label="Doctors" value={doctorCount} />
-        <StatCard label="Patients served" value={patientRows.length} />
-        <StatCard label="Total appointments" value={total} />
-        <StatCard label="Upcoming" value={upcoming} />
-        <StatCard label="Completed" value={completed} />
-      </div>
-
-      <div className="mt-10 flex items-center justify-between"><h2 className="text-xl font-semibold">Doctors</h2><Link href="/admin/doctors/new" className="rounded-lg bg-teal-700 px-3 py-2 text-sm text-white hover:bg-teal-800">Add doctor</Link></div>
-      <div className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-gray-200 bg-gray-50 text-gray-600">
-            <tr>
-              <th className="px-4 py-3 font-medium">Name</th>
-              <th className="px-4 py-3 font-medium">Specialty</th>
-              <th className="px-4 py-3 font-medium">Appointments</th>
-            </tr>
-          </thead>
-          <tbody>
-            {doctors.map((d) => (
-              <tr key={d.id} className="border-b border-gray-100 last:border-0">
-                <td className="px-4 py-3">{d.user.name}</td>
-                <td className="px-4 py-3 text-teal-700">{d.specialty}</td>
-                <td className="px-4 py-3">{d._count.appointments}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <h2 className="mt-10 text-xl font-semibold">Recent appointments</h2>
-      {recent.length === 0 ? (
-        <p className="mt-3 text-gray-600">No appointments yet.</p>
-      ) : (
-        <div className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="mt-12 flex items-center justify-between gap-4">
+          <h2 className="text-2xl font-extrabold text-[#0a1f44]">
+            {tr("doctors_h")}
+          </h2>
+          <Link
+            href="/admin/doctors/new"
+            className="rounded-full bg-gradient-to-r from-[#0fa596] to-[#0a6a9a] px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:opacity-95"
+          >
+            {tr("add_doctor")}
+          </Link>
+        </div>
+        <div className="mt-4 overflow-x-auto rounded-3xl bg-white shadow-lg shadow-slate-200/60 ring-1 ring-slate-100">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-gray-200 bg-gray-50 text-gray-600">
+            <thead className="border-b border-slate-100 bg-[#f3fbf9]">
               <tr>
-                <th className="px-4 py-3 font-medium">When</th>
-                <th className="px-4 py-3 font-medium">Patient</th>
-                <th className="px-4 py-3 font-medium">Doctor</th>
-                <th className="px-4 py-3 font-medium">Status</th>
+                <th className={th}>{tr("col_name")}</th>
+                <th className={th}>{tr("col_specialty")}</th>
+                <th className={th}>{tr("col_appts")}</th>
               </tr>
             </thead>
             <tbody>
-              {recent.map((a) => (
-                <tr key={a.id} className="border-b border-gray-100 last:border-0">
-                  <td className="px-4 py-3">
-                    {formatDayLabel(dateOf(a.startsAt))},{" "}
-                    {formatTime(timeOf(a.startsAt))}
+              {doctors.map((d) => (
+                <tr key={d.id} className="border-b border-slate-50 last:border-0">
+                  <td className="px-5 py-4 font-semibold text-[#0a1f44]">
+                    {d.user.name}
                   </td>
-                  <td className="px-4 py-3">{a.patient.user.name}</td>
-                  <td className="px-4 py-3">{a.doctor.user.name}</td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`rounded-full px-2 py-1 text-xs font-medium ${
-                        statusStyle[a.status] ?? ""
-                      }`}
-                    >
-                      {a.status}
+                  <td className="px-5 py-4">
+                    <span className="rounded-full bg-[#d5f1ec] px-3 py-1 text-xs font-bold text-[#0d8f82]">
+                      {specialtyNames[d.specialty]?.[locale] ?? d.specialty}
                     </span>
+                  </td>
+                  <td className="px-5 py-4 text-[#0a1f44]">
+                    {d._count.appointments}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      )}
+
+        <h2 className="mt-12 text-2xl font-extrabold text-[#0a1f44]">
+          {tr("recent")}
+        </h2>
+        {recent.length === 0 ? (
+          <p className="mt-4 rounded-2xl bg-white p-6 text-slate-500 shadow-sm ring-1 ring-slate-100">
+            {tr("no_appts")}
+          </p>
+        ) : (
+          <div className="mt-4 overflow-x-auto rounded-3xl bg-white shadow-lg shadow-slate-200/60 ring-1 ring-slate-100">
+            <table className="w-full text-left text-sm">
+              <thead className="border-b border-slate-100 bg-[#f3fbf9]">
+                <tr>
+                  <th className={th}>{tr("col_when")}</th>
+                  <th className={th}>{tr("col_patient")}</th>
+                  <th className={th}>{tr("col_doctor")}</th>
+                  <th className={th}>{tr("col_status")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recent.map((a) => {
+                  const st = STATUS[a.status];
+                  return (
+                    <tr key={a.id} className="border-b border-slate-50 last:border-0">
+                      <td className="px-5 py-4 text-[#0a1f44]">
+                        {dayLabel(dateOf(a.startsAt), locale)},{" "}
+                        {formatTime(timeOf(a.startsAt))}
+                      </td>
+                      <td className="px-5 py-4 text-[#0a1f44]">
+                        {a.patient.user.name}
+                      </td>
+                      <td className="px-5 py-4 text-[#0a1f44]">
+                        {a.doctor.user.name}
+                      </td>
+                      <td className="px-5 py-4">
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-bold ${st.style}`}
+                        >
+                          {pages4[st.key][locale]}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
     </>
   );
 }
 
 export default function AdminPage() {
   return (
-    <main className="min-h-screen bg-gray-50 px-6 py-10 text-gray-900">
-      <div className="mx-auto max-w-4xl">
-        <h1 className="text-3xl font-bold text-teal-700">Admin Dashboard</h1>
-        <Suspense fallback={<p className="mt-6 text-gray-500">Loading...</p>}>
-          <AdminDashboard />
-        </Suspense>
-      </div>
+    <main className="min-h-screen bg-slate-50 text-slate-900">
+      <Suspense fallback={<p className="px-6 py-10 text-slate-500">Loading...</p>}>
+        <AdminDashboard />
+      </Suspense>
     </main>
   );
 }

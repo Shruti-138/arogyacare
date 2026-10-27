@@ -1,0 +1,66 @@
+﻿import type { Msg } from "./common";
+
+export const pages5 = {
+  dash_title: { en: "Doctor Dashboard", hi: "डॉक्टर डैशबोर्ड", pa: "ਡਾਕਟਰ ਡੈਸ਼ਬੋਰਡ" },
+  up_appts: { en: "Upcoming appointments", hi: "आगामी अपॉइंटमेंट", pa: "ਆਉਣ ਵਾਲੀਆਂ ਅਪਾਇੰਟਮੈਂਟਾਂ" },
+  no_up: {
+    en: "No upcoming appointments yet.",
+    hi: "अभी कोई आगामी अपॉइंटमेंट नहीं है।",
+    pa: "ਹਾਲੇ ਕੋਈ ਆਉਣ ਵਾਲੀ ਅਪਾਇੰਟਮੈਂਟ ਨਹੀਂ ਹੈ।",
+  },
+  completed: { en: "Completed", hi: "पूरी हुईं", pa: "ਪੂਰੀਆਂ ਹੋਈਆਂ" },
+  no_done: {
+    en: "No completed appointments yet.",
+    hi: "अभी कोई पूरी हुई अपॉइंटमेंट नहीं है।",
+    pa: "ਹਾਲੇ ਕੋਈ ਪੂਰੀ ਹੋਈ ਅਪਾਇੰਟਮੈਂਟ ਨਹੀਂ ਹੈ।",
+  },
+  phone: { en: "Phone", hi: "फ़ोन", pa: "ਫ਼ੋਨ" },
+  mark_done: { en: "Mark completed", hi: "पूरी हुई चिह्नित करें", pa: "ਪੂਰੀ ਹੋਈ ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕਰੋ" },
+  rx_label: { en: "Prescription", hi: "प्रिस्क्रिप्शन", pa: "ਨੁਸਖ਼ਾ" },
+  rx_meds_ph: {
+    en: "Medicines, dose and duration (one per line)",
+    hi: "दवाइयाँ, खुराक और अवधि (हर पंक्ति में एक)",
+    pa: "ਦਵਾਈਆਂ, ਖੁਰਾਕ ਅਤੇ ਮਿਆਦ (ਹਰ ਲਾਈਨ ਵਿੱਚ ਇੱਕ)",
+  },
+  rx_notes_ph: { en: "Notes (optional)", hi: "नोट्स (वैकल्पिक)", pa: "ਨੋਟਸ (ਵਿਕਲਪਿਕ)" },
+  save_rx: { en: "Save prescription", hi: "प्रिस्क्रिप्शन सहेजें", pa: "ਨੁਸਖ਼ਾ ਸੰਭਾਲੋ" },
+  notes_lbl: { en: "Notes", hi: "नोट्स", pa: "ਨੋਟਸ" },
+  only_doctors: {
+    en: "The dashboard is only for doctor accounts.",
+    hi: "डैशबोर्ड केवल डॉक्टर खातों के लिए है।",
+    pa: "ਡੈਸ਼ਬੋਰਡ ਸਿਰਫ਼ ਡਾਕਟਰ ਖਾਤਿਆਂ ਲਈ ਹੈ।",
+  },
+  no_doc_profile: {
+    en: "Doctor profile not found.",
+    hi: "डॉक्टर प्रोफ़ाइल नहीं मिली।",
+    pa: "ਡਾਕਟਰ ਪ੍ਰੋਫਾਈਲ ਨਹੀਂ ਮਿਲੀ।",
+  },
+
+  admin_title: { en: "Admin Dashboard", hi: "एडमिन डैशबोर्ड", pa: "ਐਡਮਿਨ ਡੈਸ਼ਬੋਰਡ" },
+  only_admins: {
+    en: "The admin dashboard is only for hospital admin accounts.",
+    hi: "एडमिन डैशबोर्ड केवल अस्पताल एडमिन खातों के लिए है।",
+    pa: "ਐਡਮਿਨ ਡੈਸ਼ਬੋਰਡ ਸਿਰਫ਼ ਹਸਪਤਾਲ ਐਡਮਿਨ ਖਾਤਿਆਂ ਲਈ ਹੈ।",
+  },
+  no_hospital: {
+    en: "Your account is not linked to a hospital.",
+    hi: "आपका खाता किसी अस्पताल से जुड़ा नहीं है।",
+    pa: "ਤੁਹਾਡਾ ਖਾਤਾ ਕਿਸੇ ਹਸਪਤਾਲ ਨਾਲ ਜੁੜਿਆ ਨਹੀਂ ਹੈ।",
+  },
+  stat_doctors: { en: "Doctors", hi: "डॉक्टर", pa: "ਡਾਕਟਰ" },
+  stat_patients: { en: "Patients served", hi: "सेवा किए गए मरीज़", pa: "ਸੇਵਾ ਕੀਤੇ ਮਰੀਜ਼" },
+  stat_total: { en: "Total appointments", hi: "कुल अपॉइंटमेंट", pa: "ਕੁੱਲ ਅਪਾਇੰਟਮੈਂਟਾਂ" },
+  stat_upcoming: { en: "Upcoming", hi: "आगामी", pa: "ਆਉਣ ਵਾਲੀਆਂ" },
+  stat_completed: { en: "Completed", hi: "पूरी हुईं", pa: "ਪੂਰੀਆਂ ਹੋਈਆਂ" },
+  doctors_h: { en: "Doctors", hi: "डॉक्टर", pa: "ਡਾਕਟਰ" },
+  add_doctor: { en: "Add doctor", hi: "डॉक्टर जोड़ें", pa: "ਡਾਕਟਰ ਸ਼ਾਮਲ ਕਰੋ" },
+  col_name: { en: "Name", hi: "नाम", pa: "ਨਾਮ" },
+  col_specialty: { en: "Specialty", hi: "विशेषज्ञता", pa: "ਵਿਸ਼ੇਸ਼ਤਾ" },
+  col_appts: { en: "Appointments", hi: "अपॉइंटमेंट", pa: "ਅਪਾਇੰਟਮੈਂਟਾਂ" },
+  recent: { en: "Recent appointments", hi: "हाल की अपॉइंटमेंट", pa: "ਹਾਲੀਆ ਅਪਾਇੰਟਮੈਂਟਾਂ" },
+  no_appts: { en: "No appointments yet.", hi: "अभी कोई अपॉइंटमेंट नहीं है।", pa: "ਹਾਲੇ ਕੋਈ ਅਪਾਇੰਟਮੈਂਟ ਨਹੀਂ ਹੈ।" },
+  col_when: { en: "When", hi: "कब", pa: "ਕਦੋਂ" },
+  col_patient: { en: "Patient", hi: "मरीज़", pa: "ਮਰੀਜ਼" },
+  col_doctor: { en: "Doctor", hi: "डॉक्टर", pa: "ਡਾਕਟਰ" },
+  col_status: { en: "Status", hi: "स्थिति", pa: "ਸਥਿਤੀ" },
+} satisfies Record<string, Msg>;
