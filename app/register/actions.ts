@@ -1,11 +1,13 @@
-"use server";
+﻿"use server";
 
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { prisma } from "../../lib/prisma";
 import { createSession } from "../../lib/session";
 
-export type RegisterState = { error?: string } | null;
+export type RegisterState = {
+  error?: "name" | "email" | "password" | "exists";
+} | null;
 
 export async function registerPatient(
   _prev: RegisterState,
@@ -16,20 +18,12 @@ export async function registerPatient(
   const phone = String(formData.get("phone") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
-  if (name.length < 2) {
-    return { error: "Please enter your full name." };
-  }
-  if (!/^\S+@\S+\.\S+$/.test(email)) {
-    return { error: "Please enter a valid email address." };
-  }
-  if (password.length < 8) {
-    return { error: "Password must be at least 8 characters." };
-  }
+  if (name.length < 2) return { error: "name" };
+  if (!/^\S+@\S+\.\S+$/.test(email)) return { error: "email" };
+  if (password.length < 8) return { error: "password" };
 
   const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
-    return { error: "An account with this email already exists." };
-  }
+  if (existing) return { error: "exists" };
 
   const passwordHash = await bcrypt.hash(password, 10);
 

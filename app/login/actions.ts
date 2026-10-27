@@ -1,11 +1,11 @@
-"use server";
+﻿"use server";
 
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { prisma } from "../../lib/prisma";
 import { createSession } from "../../lib/session";
 
-export type LoginState = { error?: string } | null;
+export type LoginState = { error?: "missing" | "invalid" } | null;
 
 export async function loginUser(
   _prev: LoginState,
@@ -15,7 +15,7 @@ export async function loginUser(
   const password = String(formData.get("password") ?? "");
 
   if (!email || !password) {
-    return { error: "Please enter your email and password." };
+    return { error: "missing" };
   }
 
   const user = await prisma.user.findUnique({ where: { email } });
@@ -24,7 +24,7 @@ export async function loginUser(
     : false;
 
   if (!user || !passwordOk) {
-    return { error: "Invalid email or password." };
+    return { error: "invalid" };
   }
 
   await createSession({ userId: user.id, role: user.role });

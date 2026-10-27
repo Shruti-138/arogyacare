@@ -1,51 +1,62 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { loginUser, type LoginState } from "./actions";
 
-export default function LoginForm() {
+export default function LoginForm({
+  labels,
+}: {
+  labels: {
+    email: string;
+    password: string;
+    submit: string;
+    submitting: string;
+    missing: string;
+    invalid: string;
+  };
+}) {
   const [state, formAction, pending] = useActionState<LoginState, FormData>(
     loginUser,
     null
   );
 
-  const inputClass =
-    "mt-1 w-full rounded-lg border border-gray-300 bg-white px-4 py-2";
+  const input =
+    "mt-2 w-full rounded-2xl border border-slate-200 bg-[#f3fbf9] px-4 py-3.5 text-base text-[#0a1f44] outline-none transition focus:border-[#0fa596] focus:ring-4 focus:ring-[#0fa596]/15";
 
   return (
-    <form action={formAction} className="mt-6 space-y-4">
+    <form action={formAction} className="mt-8 space-y-5">
       <div>
-        <label htmlFor="email" className="text-sm font-medium">
-          Email
+        <label htmlFor="email" className="text-sm font-semibold text-[#0a1f44]">
+          {labels.email}
         </label>
-        <input id="email" name="email" type="email" required className={inputClass} />
+        <input id="email" name="email" type="email" required className={input} />
       </div>
 
       <div>
-        <label htmlFor="password" className="text-sm font-medium">
-          Password
+        <label htmlFor="password" className="text-sm font-semibold text-[#0a1f44]">
+          {labels.password}
         </label>
         <input
           id="password"
           name="password"
           type="password"
           required
-          className={inputClass}
+          className={input}
         />
       </div>
 
       {state?.error && (
-        <p className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-700">
-          {state.error}
+        <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          {state.error === "missing" ? labels.missing : labels.invalid}
         </p>
       )}
 
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-lg bg-teal-700 px-5 py-2 font-medium text-white hover:bg-teal-800 disabled:opacity-60"
+        className="w-full rounded-full bg-gradient-to-r from-[#0fa596] to-[#0a6a9a] px-6 py-4 text-lg font-semibold text-white shadow-lg shadow-teal-600/25 hover:opacity-95 disabled:opacity-60"
       >
-        {pending ? "Signing in..." : "Sign in"}
+        {pending ? labels.submitting : labels.submit}
       </button>
     </form>
   );
