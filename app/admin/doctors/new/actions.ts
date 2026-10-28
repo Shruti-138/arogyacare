@@ -1,28 +1,41 @@
-"use server";
+﻿"use server";
 
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { prisma } from "../../../../lib/prisma";
 import { getSession } from "../../../../lib/session";
+import { specialtyNames } from "../../../../lib/messages/home";
 
-export type AddDoctorState = { error?: string } | null;
+export type AddDoctorState = {
+  error?:
+    | "not_admin"
+    | "no_hospital"
+    | "name"
+    | "email"
+    | "password"
+    | "specialty"
+    | "years"
+    | "bio"
+    | "days"
+    | "hours"
+    | "order"
+    | "slot"
+    | "exists"
+    | "failed";
+} | null;
 
 export async function addDoctor(
   _prev: AddDoctorState,
   formData: FormData
 ): Promise<AddDoctorState> {
   const session = await getSession();
-  if (!session || session.role !== "ADMIN") {
-    return { error: "Only hospital admins can add doctors." };
-  }
+  if (!session || session.role !== "ADMIN") return { error: "not_admin" };
 
   const admin = await prisma.user.findUnique({
     where: { id: session.userId },
     select: { hospitalId: true },
   });
-  if (!admin?.hospitalId) {
-    return { error: "Your account is not linked to a hospital." };
-  }
+  if (!admin?.hospitalId) return { error: "no_hospital" };
 
   const name = String(formData.get("name") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
@@ -38,33 +51,25 @@ export async function addDoctor(
     .map((d) => Number(d))
     .filter((d) => Number.isInteger(d) && d >= 0 && d <= 6);
 
-  if (name.length < 3) return { error: "Please enter the doctor's full name." };
-  if (!/^\S+@\S+\.\S+$/.test(email)) {
-    return { error: "Please enter a valid email address." };
+  if (name.length < 3) return { error: "name" };
+  if (!/^\S+@\S+\.\S+$/.test(email)) return { error: "email" };
+  if (password.length < 8) return { error: "password" };
+  if (!Object.keys(specialtyNames).includes(specialty)) {
+    return { error: "specialty" };
   }
-  if (password.length < 8) {
-    return { error: "Password must be at least 8 characters." };
-  }
-  if (specialty.length < 3) return { error: "Please enter a specialty." };
   if (!Number.isInteger(years) || years < 0 || years > 60) {
-    return { error: "Experience must be between 0 and 60 years." };
+    return { error: "years" };
   }
-  if (bio.length > 500) return { error: "Bio must be under 500 characters." };
-  if (days.length === 0) return { error: "Select at least one working day." };
+  if (bio.length > 500) return { error: "bio" };
+  if (days.length === 0) return { error: "days" };
   if (!/^\d{2}:\d{2}$/.test(startTime) || !/^\d{2}:\d{2}$/.test(endTime)) {
-    return { error: "Please enter valid working hours." };
+    return { error: "hours" };
   }
-  if (startTime >= endTime) {
-    return { error: "End time must be after start time." };
-  }
-  if (![15, 20, 30, 45, 60].includes(slotMinutes)) {
-    return { error: "Invalid slot length." };
-  }
+  if (startTime >= endTime) return { error: "order" };
+  if (![15, 20, 30, 45, 60].includes(slotMinutes)) return { error: "slot" };
 
   const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
-    return { error: "An account with this email already exists." };
-  }
+  if (existing) return { error: "exists" };
 
   const passwordHash = await bcrypt.hash(password, 10);
 
@@ -95,7 +100,7 @@ export async function addDoctor(
       },
     });
   } catch {
-    return { error: "Could not add the doctor. Please try again." };
+    return { error: "failed" };
   }
 
   redirect("/admin");

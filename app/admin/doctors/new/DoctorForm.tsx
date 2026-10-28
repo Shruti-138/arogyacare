@@ -1,46 +1,51 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { addDoctor, type AddDoctorState } from "./actions";
 
-const DAYS = [
-  { value: 1, label: "Mon" },
-  { value: 2, label: "Tue" },
-  { value: 3, label: "Wed" },
-  { value: 4, label: "Thu" },
-  { value: 5, label: "Fri" },
-  { value: 6, label: "Sat" },
-  { value: 0, label: "Sun" },
-];
+type Opt = { value: string; label: string };
 
-export default function DoctorForm() {
+export default function DoctorForm({
+  labels,
+  days,
+  specialties,
+  slotOptions,
+  errors,
+}: {
+  labels: Record<string, string>;
+  days: { value: number; label: string }[];
+  specialties: Opt[];
+  slotOptions: Opt[];
+  errors: Record<string, string>;
+}) {
   const [state, formAction, pending] = useActionState<AddDoctorState, FormData>(
     addDoctor,
     null
   );
 
   const input =
-    "mt-1 w-full rounded-lg border border-gray-300 bg-white px-4 py-2";
+    "mt-2 w-full rounded-2xl border border-slate-200 bg-[#f3fbf9] px-4 py-3.5 text-base text-[#0a1f44] outline-none transition focus:border-[#0fa596] focus:ring-4 focus:ring-[#0fa596]/15";
+  const label = "text-sm font-semibold text-[#0a1f44]";
 
   return (
-    <form action={formAction} className="mt-6 space-y-4">
+    <form action={formAction} className="space-y-5">
       <div>
-        <label htmlFor="name" className="text-sm font-medium">
-          Full name
+        <label htmlFor="name" className={label}>
+          {labels.name}
         </label>
         <input id="name" name="name" required className={input} />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="email" className="text-sm font-medium">
-            Email
+          <label htmlFor="email" className={label}>
+            {labels.email}
           </label>
           <input id="email" name="email" type="email" required className={input} />
         </div>
         <div>
-          <label htmlFor="password" className="text-sm font-medium">
-            Temporary password (8+ characters)
+          <label htmlFor="password" className={label}>
+            {labels.password}
           </label>
           <input
             id="password"
@@ -53,22 +58,31 @@ export default function DoctorForm() {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="specialty" className="text-sm font-medium">
-            Specialty
+          <label htmlFor="specialty" className={label}>
+            {labels.specialty}
           </label>
-          <input
+          <select
             id="specialty"
             name="specialty"
             required
-            placeholder="e.g. Pediatrics"
+            defaultValue=""
             className={input}
-          />
+          >
+            <option value="" disabled>
+              {labels.choose}
+            </option>
+            {specialties.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
-          <label htmlFor="experienceYears" className="text-sm font-medium">
-            Years of experience
+          <label htmlFor="experienceYears" className={label}>
+            {labels.years}
           </label>
           <input
             id="experienceYears"
@@ -84,33 +98,36 @@ export default function DoctorForm() {
       </div>
 
       <div>
-        <label htmlFor="bio" className="text-sm font-medium">
-          Short bio (optional)
+        <label htmlFor="bio" className={label}>
+          {labels.bio}
         </label>
         <textarea id="bio" name="bio" rows={2} maxLength={500} className={input} />
       </div>
 
       <fieldset>
-        <legend className="text-sm font-medium">Working days</legend>
-        <div className="mt-2 flex flex-wrap gap-3">
-          {DAYS.map((d) => (
-            <label key={d.value} className="flex items-center gap-1 text-sm">
+        <legend className={label}>{labels.days}</legend>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {days.map((d) => (
+            <label key={d.value} className="cursor-pointer">
               <input
                 type="checkbox"
                 name="days"
                 value={d.value}
                 defaultChecked={d.value >= 1 && d.value <= 5}
+                className="peer sr-only"
               />
-              {d.label}
+              <span className="inline-block rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#0a1f44] ring-1 ring-slate-200 peer-checked:bg-gradient-to-r peer-checked:from-[#0fa596] peer-checked:to-[#0a6a9a] peer-checked:text-white peer-checked:ring-0">
+                {d.label}
+              </span>
             </label>
           ))}
         </div>
       </fieldset>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-3">
         <div>
-          <label htmlFor="startTime" className="text-sm font-medium">
-            Start time
+          <label htmlFor="startTime" className={label}>
+            {labels.start}
           </label>
           <input
             id="startTime"
@@ -122,8 +139,8 @@ export default function DoctorForm() {
           />
         </div>
         <div>
-          <label htmlFor="endTime" className="text-sm font-medium">
-            End time
+          <label htmlFor="endTime" className={label}>
+            {labels.end}
           </label>
           <input
             id="endTime"
@@ -135,8 +152,8 @@ export default function DoctorForm() {
           />
         </div>
         <div>
-          <label htmlFor="slotMinutes" className="text-sm font-medium">
-            Slot length
+          <label htmlFor="slotMinutes" className={label}>
+            {labels.slot}
           </label>
           <select
             id="slotMinutes"
@@ -144,28 +161,28 @@ export default function DoctorForm() {
             defaultValue="30"
             className={input}
           >
-            <option value="15">15 minutes</option>
-            <option value="20">20 minutes</option>
-            <option value="30">30 minutes</option>
-            <option value="45">45 minutes</option>
-            <option value="60">60 minutes</option>
+            {slotOptions.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
           </select>
         </div>
       </div>
 
       {state?.error && (
-        <p className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-700">
-          {state.error}
+        <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          {errors[state.error]}
         </p>
       )}
 
       <button
         type="submit"
         disabled={pending}
-        className="rounded-lg bg-teal-700 px-5 py-2 font-medium text-white hover:bg-teal-800 disabled:opacity-60"
+        className="rounded-full bg-gradient-to-r from-[#0fa596] to-[#0a6a9a] px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-teal-600/25 hover:opacity-95 disabled:opacity-60"
       >
-        {pending ? "Adding doctor..." : "Add doctor"}
-              </button>
+        {pending ? labels.submitting : labels.submit}
+      </button>
     </form>
   );
 }

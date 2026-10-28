@@ -1,0 +1,107 @@
+﻿import type { Msg } from "./common";
+
+export const pages6 = {
+  add_title: { en: "Add a doctor", hi: "डॉक्टर जोड़ें", pa: "ਡਾਕਟਰ ਸ਼ਾਮਲ ਕਰੋ" },
+  add_sub: {
+    en: "Create a doctor account with a weekly schedule.",
+    hi: "साप्ताहिक शेड्यूल के साथ डॉक्टर खाता बनाएँ।",
+    pa: "ਹਫ਼ਤਾਵਾਰੀ ਸ਼ਡਿਊਲ ਨਾਲ ਡਾਕਟਰ ਖਾਤਾ ਬਣਾਓ।",
+  },
+  back_admin: { en: "Admin dashboard", hi: "एडमिन डैशबोर्ड", pa: "ਐਡਮਿਨ ਡੈਸ਼ਬੋਰਡ" },
+  only_admin_page: {
+    en: "Only hospital admin accounts can add doctors.",
+    hi: "केवल अस्पताल एडमिन खाते डॉक्टर जोड़ सकते हैं।",
+    pa: "ਸਿਰਫ਼ ਹਸਪਤਾਲ ਐਡਮਿਨ ਖਾਤੇ ਡਾਕਟਰ ਸ਼ਾਮਲ ਕਰ ਸਕਦੇ ਹਨ।",
+  },
+  f_name: { en: "Full name", hi: "पूरा नाम", pa: "ਪੂਰਾ ਨਾਮ" },
+  f_email: { en: "Email", hi: "ईमेल", pa: "ਈਮੇਲ" },
+  f_password: {
+    en: "Temporary password (8+ characters)",
+    hi: "अस्थायी पासवर्ड (8+ अक्षर)",
+    pa: "ਅਸਥਾਈ ਪਾਸਵਰਡ (8+ ਅੱਖਰ)",
+  },
+  f_specialty: { en: "Specialty", hi: "विशेषज्ञता", pa: "ਵਿਸ਼ੇਸ਼ਤਾ" },
+  f_choose: { en: "Choose a specialty", hi: "विशेषज्ञता चुनें", pa: "ਵਿਸ਼ੇਸ਼ਤਾ ਚੁਣੋ" },
+  f_years: { en: "Years of experience", hi: "अनुभव (वर्ष)", pa: "ਤਜਰਬਾ (ਸਾਲ)" },
+  f_bio: { en: "Short bio (optional)", hi: "संक्षिप्त परिचय (वैकल्पिक)", pa: "ਛੋਟਾ ਪਰੀਚਏ (ਵਿਕਲਪਿਕ)" },
+  f_days: { en: "Working days", hi: "कार्य दिवस", pa: "ਕੰਮ ਦੇ ਦਿਨ" },
+  f_start: { en: "Start time", hi: "शुरू होने का समय", pa: "ਸ਼ੁਰੂ ਹੋਣ ਦਾ ਸਮਾਂ" },
+  f_end: { en: "End time", hi: "समाप्ति का समय", pa: "ਸਮਾਪਤੀ ਦਾ ਸਮਾਂ" },
+  f_slot: { en: "Slot length", hi: "स्लॉट की अवधि", pa: "ਸਲਾਟ ਦੀ ਮਿਆਦ" },
+  mins: { en: "{n} minutes", hi: "{n} मिनट", pa: "{n} ਮਿੰਟ" },
+  d_mon: { en: "Mon", hi: "सोम", pa: "ਸੋਮ" },
+  d_tue: { en: "Tue", hi: "मंगल", pa: "ਮੰਗਲ" },
+  d_wed: { en: "Wed", hi: "बुध", pa: "ਬੁੱਧ" },
+  d_thu: { en: "Thu", hi: "गुरु", pa: "ਵੀਰ" },
+  d_fri: { en: "Fri", hi: "शुक्र", pa: "ਸ਼ੁੱਕਰ" },
+  d_sat: { en: "Sat", hi: "शनि", pa: "ਸ਼ਨੀ" },
+  d_sun: { en: "Sun", hi: "रवि", pa: "ਐਤ" },
+  add_btn: { en: "Add doctor", hi: "डॉक्टर जोड़ें", pa: "ਡਾਕਟਰ ਸ਼ਾਮਲ ਕਰੋ" },
+  adding: { en: "Adding doctor...", hi: "डॉक्टर जोड़ा जा रहा है...", pa: "ਡਾਕਟਰ ਸ਼ਾਮਲ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..." },
+  e_not_admin: {
+    en: "Only hospital admins can add doctors.",
+    hi: "केवल अस्पताल एडमिन डॉक्टर जोड़ सकते हैं।",
+    pa: "ਸਿਰਫ਼ ਹਸਪਤਾਲ ਐਡਮਿਨ ਡਾਕਟਰ ਸ਼ਾਮਲ ਕਰ ਸਕਦੇ ਹਨ।",
+  },
+  e_no_hospital: {
+    en: "Your account is not linked to a hospital.",
+    hi: "आपका खाता किसी अस्पताल से जुड़ा नहीं है।",
+    pa: "ਤੁਹਾਡਾ ਖਾਤਾ ਕਿਸੇ ਹਸਪਤਾਲ ਨਾਲ ਜੁੜਿਆ ਨਹੀਂ ਹੈ।",
+  },
+  e_name: {
+    en: "Please enter the doctor's full name.",
+    hi: "कृपया डॉक्टर का पूरा नाम दर्ज करें।",
+    pa: "ਕਿਰਪਾ ਕਰਕੇ ਡਾਕਟਰ ਦਾ ਪੂਰਾ ਨਾਮ ਦਰਜ ਕਰੋ।",
+  },
+  e_email: {
+    en: "Please enter a valid email address.",
+    hi: "कृपया मान्य ईमेल पता दर्ज करें।",
+    pa: "ਕਿਰਪਾ ਕਰਕੇ ਸਹੀ ਈਮੇਲ ਪਤਾ ਦਰਜ ਕਰੋ।",
+  },
+  e_password: {
+    en: "Password must be at least 8 characters.",
+    hi: "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए।",
+    pa: "ਪਾਸਵਰਡ ਘੱਟੋ-ਘੱਟ 8 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।",
+  },
+  e_specialty: {
+    en: "Please choose a specialty.",
+    hi: "कृपया विशेषज्ञता चुनें।",
+    pa: "ਕਿਰਪਾ ਕਰਕੇ ਵਿਸ਼ੇਸ਼ਤਾ ਚੁਣੋ।",
+  },
+  e_years: {
+    en: "Experience must be between 0 and 60 years.",
+    hi: "अनुभव 0 से 60 वर्ष के बीच होना चाहिए।",
+    pa: "ਤਜਰਬਾ 0 ਤੋਂ 60 ਸਾਲ ਦੇ ਵਿਚਕਾਰ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।",
+  },
+  e_bio: {
+    en: "Bio must be under 500 characters.",
+    hi: "परिचय 500 अक्षरों से कम होना चाहिए।",
+    pa: "ਪਰੀਚਏ 500 ਅੱਖਰਾਂ ਤੋਂ ਘੱਟ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।",
+  },
+  e_days: {
+    en: "Select at least one working day.",
+    hi: "कम से कम एक कार्य दिवस चुनें।",
+    pa: "ਘੱਟੋ-ਘੱਟ ਇੱਕ ਕੰਮ ਦਾ ਦਿਨ ਚੁਣੋ।",
+  },
+  e_hours: {
+    en: "Please enter valid working hours.",
+    hi: "कृपया मान्य कार्य समय दर्ज करें।",
+    pa: "ਕਿਰਪਾ ਕਰਕੇ ਸਹੀ ਕੰਮ ਦਾ ਸਮਾਂ ਦਰਜ ਕਰੋ।",
+  },
+  e_order: {
+    en: "End time must be after start time.",
+    hi: "समाप्ति का समय शुरू के समय के बाद होना चाहिए।",
+    pa: "ਸਮਾਪਤੀ ਦਾ ਸਮਾਂ ਸ਼ੁਰੂ ਹੋਣ ਦੇ ਸਮੇਂ ਤੋਂ ਬਾਅਦ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।",
+  },
+  e_slot: { en: "Invalid slot length.", hi: "स्लॉट की अवधि मान्य नहीं है।", pa: "ਸਲਾਟ ਦੀ ਮਿਆਦ ਸਹੀ ਨਹੀਂ ਹੈ।" },
+  e_exists: {
+    en: "An account with this email already exists.",
+    hi: "इस ईमेल से खाता पहले से मौजूद है।",
+    pa: "ਇਸ ਈਮੇਲ ਨਾਲ ਖਾਤਾ ਪਹਿਲਾਂ ਤੋਂ ਮੌਜੂਦ ਹੈ।",
+  },
+  e_failed: {
+    en: "Could not add the doctor. Please try again.",
+    hi: "डॉक्टर को जोड़ा नहीं जा सका। कृपया फिर से प्रयास करें।",
+    pa: "ਡਾਕਟਰ ਨੂੰ ਸ਼ਾਮਲ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+  },
+} satisfies Record<string, Msg>;
