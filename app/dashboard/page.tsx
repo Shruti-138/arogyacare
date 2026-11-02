@@ -1,4 +1,4 @@
-﻿import { Suspense } from "react";
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { CalendarDays, Phone } from "lucide-react";
 import { prisma } from "../../lib/prisma";
@@ -9,6 +9,7 @@ import { dayLabel } from "../../lib/dates";
 import { pages5 } from "../../lib/messages/pages5";
 import { specialtyNames } from "../../lib/messages/home";
 import PageHeader from "../components/PageHeader";
+import JoinCall from "../components/JoinCall";
 import { completeAppointment, savePrescription } from "./actions";
 
 function dateOf(d: Date) {
@@ -56,6 +57,7 @@ async function DoctorDashboard() {
           id: true,
           startsAt: true,
           status: true,
+          mode: true,
           patient: {
             select: { phone: true, user: { select: { name: true } } },
           },
@@ -124,7 +126,7 @@ async function DoctorDashboard() {
                         )}
                       </div>
                     </div>
-                    <form action={completeAppointment}>
+                    <div className="flex flex-wrap items-center gap-3"><JoinCall id={a.id} mode={a.mode} startsAt={a.startsAt} locale={locale} /><form action={completeAppointment}>
                       <input type="hidden" name="appointmentId" value={a.id} />
                       <button
                         type="submit"
@@ -132,7 +134,7 @@ async function DoctorDashboard() {
                       >
                         {tr("mark_done")}
                       </button>
-                    </form>
+                    </form></div>
                   </div>
                 ))}
               </div>

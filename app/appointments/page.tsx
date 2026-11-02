@@ -1,4 +1,4 @@
-﻿import { Suspense } from "react";
+import { Suspense } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Building2, CalendarDays } from "lucide-react";
@@ -10,6 +10,7 @@ import { dayLabel } from "../../lib/dates";
 import { pages4 } from "../../lib/messages/pages4";
 import { specialtyNames } from "../../lib/messages/home";
 import PageHeader from "../components/PageHeader";
+import JoinCall from "../components/JoinCall";
 import { cancelAppointment } from "./actions";
 
 function dateOf(d: Date) {
@@ -27,6 +28,7 @@ type Item = {
   id: string;
   startsAt: Date;
   status: keyof typeof STATUS;
+  mode: "IN_PERSON" | "ONLINE";
   doctor: {
     specialty: string;
     user: { name: string };
@@ -84,6 +86,7 @@ function Row({
         >
           {pages4[st.key][locale]}
         </span>
+        <JoinCall id={a.id} mode={a.mode} startsAt={a.startsAt} locale={locale} />
         {cancelable && (
           <form action={cancelAppointment}>
             <input type="hidden" name="appointmentId" value={a.id} />
@@ -122,6 +125,7 @@ async function Content() {
           id: true,
           startsAt: true,
           status: true,
+          mode: true,
           doctor: {
             select: {
               specialty: true,
