@@ -15,6 +15,7 @@ export async function bookAppointment(
   const doctorId = String(formData.get("doctorId") ?? "");
   const date = String(formData.get("date") ?? "");
   const time = String(formData.get("time") ?? "");
+  const mode = formData.get("mode") === "ONLINE" ? "ONLINE" : "IN_PERSON";
 
   const session = await getSession();
   if (!session) redirect("/login");
@@ -65,6 +66,7 @@ export async function bookAppointment(
         patientId: patient.id,
         startsAt,
         status: "CONFIRMED",
+        mode,
       },
     });
   } catch {

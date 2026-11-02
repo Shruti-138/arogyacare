@@ -1,4 +1,4 @@
-﻿import { Suspense } from "react";
+import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Building2, CheckCircle2 } from "lucide-react";
@@ -16,7 +16,8 @@ import { dayLabel } from "../../../lib/dates";
 import { pages } from "../../../lib/messages/pages";
 import { pages2 } from "../../../lib/messages/pages2";
 import { specialtyNames } from "../../../lib/messages/home";
-import BookSlot from "./BookSlot";
+import SlotPicker from "./SlotPicker";
+import { pages7 } from "../../../lib/messages/pages7";
 
 type Params = Promise<{ id: string }>;
 type SearchParams = Promise<{ date?: string; booked?: string }>;
@@ -173,34 +174,24 @@ async function DoctorDetail({
           <p className="mt-2 text-sm text-slate-500">{tr("tap_hint")}</p>
         )}
 
-        {slots.length === 0 ? (
+                        {slots.length === 0 ? (
           <p className="mt-5 rounded-2xl bg-white p-6 text-slate-500 shadow-sm ring-1 ring-slate-100">
             {tr("no_slots")}
           </p>
         ) : (
-          <div className="mt-5 flex flex-wrap items-start gap-3">
-            {slots.map((t) =>
-              isPatient ? (
-                <BookSlot
-                  key={t}
-                  doctorId={doctor.id}
-                  date={date}
-                  time={t}
-                  label={formatTime(t)}
-                />
-              ) : (
-                <span
-                  key={t}
-                  className="rounded-full bg-slate-100 px-5 py-2.5 text-sm font-medium text-slate-500"
-                >
-                  {formatTime(t)}
-                </span>
-              )
-            )}
-          </div>
+          <SlotPicker
+            doctorId={doctor.id}
+            date={date}
+            canBook={isPatient}
+            slots={slots.map((s) => ({ time: s, label: formatTime(s) }))}
+            labels={{
+              inPerson: pages7.in_person[locale],
+              video: pages7.video_call[locale],
+              hint: pages7.video_hint[locale],
+            }}
+          />
         )}
-      </section>
-    </>
+      </section></>
   );
 }
 

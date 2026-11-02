@@ -95,6 +95,7 @@ model Availability {
 }
 
 model Appointment {
+  mode      ConsultMode       @default(IN_PERSON)
   id        String            @id @default(cuid())
   startsAt  DateTime
   status    AppointmentStatus @default(PENDING)
@@ -126,4 +127,9 @@ model Prescription {
 
   patientId String
   patient   Patient @relation(fields: [patientId], references: [id])
+}
+
+enum ConsultMode {
+  IN_PERSON
+  ONLINE
 }

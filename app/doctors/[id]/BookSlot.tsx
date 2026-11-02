@@ -8,11 +8,13 @@ export default function BookSlot({
   date,
   time,
   label,
+  mode,
 }: {
   doctorId: string;
   date: string;
   time: string;
   label: string;
+  mode: "IN_PERSON" | "ONLINE";
 }) {
   const [state, formAction, pending] = useActionState<BookState, FormData>(
     bookAppointment,
@@ -24,6 +26,7 @@ export default function BookSlot({
       <input type="hidden" name="doctorId" value={doctorId} />
       <input type="hidden" name="date" value={date} />
       <input type="hidden" name="time" value={time} />
+      <input type="hidden" name="mode" value={mode} />
       <button
         type="submit"
         disabled={pending}
