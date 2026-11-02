@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { CalendarCheck, LogOut } from "lucide-react";
 import { prisma } from "../../lib/prisma";
 import { getSession } from "../../lib/session";
@@ -31,11 +31,15 @@ export default async function Header() {
   if (user?.role === "PATIENT") {
     links.push(
       { href: "/appointments", label: t("nav_appointments") },
-      { href: "/prescriptions", label: t("nav_prescriptions") }
+      { href: "/prescriptions", label: t("nav_prescriptions") },
+      { href: "/lab-reports", label: t("nav_lab") }
     );
   }
   if (user?.role === "DOCTOR") {
-    links.push({ href: "/dashboard", label: t("nav_dashboard") });
+    links.push(
+      { href: "/dashboard", label: t("nav_dashboard") },
+      { href: "/lab", label: t("nav_lab") }
+    );
   }
   if (user?.role === "ADMIN") {
     links.push({ href: "/admin", label: t("nav_admin") });

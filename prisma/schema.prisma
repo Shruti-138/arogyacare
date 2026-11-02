@@ -54,9 +54,10 @@ model User {
 }
 
 model Doctor {
-  id              String  @id @default(cuid())
+  labReports      LabReport[]
+  id              String      @id @default(cuid())
   specialty       String
-  experienceYears Int     @default(0)
+  experienceYears Int         @default(0)
   bio             String?
 
   userId String @unique
@@ -71,7 +72,8 @@ model Doctor {
 }
 
 model Patient {
-  id          String    @id @default(cuid())
+  labReports  LabReport[]
+  id          String      @id @default(cuid())
   phone       String?
   dateOfBirth DateTime?
   gender      String?
@@ -95,12 +97,13 @@ model Availability {
 }
 
 model Appointment {
-  mode      ConsultMode       @default(IN_PERSON)
-  id        String            @id @default(cuid())
-  startsAt  DateTime
-  status    AppointmentStatus @default(PENDING)
-  reason    String?
-  createdAt DateTime          @default(now())
+  labReports LabReport[]
+  mode       ConsultMode       @default(IN_PERSON)
+  id         String            @id @default(cuid())
+  startsAt   DateTime
+  status     AppointmentStatus @default(PENDING)
+  reason     String?
+  createdAt  DateTime          @default(now())
 
   doctorId String
   doctor   Doctor @relation(fields: [doctorId], references: [id])
@@ -132,4 +135,21 @@ model Prescription {
 enum ConsultMode {
   IN_PERSON
   ONLINE
+}
+
+model LabReport {
+  id        String   @id @default(cuid())
+  testName  String
+  results   String
+  notes     String?
+  createdAt DateTime @default(now())
+
+  appointmentId String
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+
+  doctorId String
+  doctor   Doctor @relation(fields: [doctorId], references: [id])
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id])
 }
