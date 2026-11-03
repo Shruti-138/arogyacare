@@ -1,44 +1,27 @@
-# ArogyaCare
+﻿# ArogyaCare
 
-**Care That Connects**: a smart hospital appointment and patient management platform.
+**Care That Connects** - a smart hospital appointment and patient management platform.
 
-*Making healthcare easier for patients and smarter for providers.*
+## Features
 
-## About
+- Patients: find doctors by specialty, book in-person or video appointments, view prescriptions and lab reports
+- Doctors: manage appointments, mark visits completed, write prescriptions, add lab reports
+- Hospital admins: dashboard with totals, add doctors with weekly schedules
+- Three languages: English, Hindi and Punjabi
+- Email notifications for bookings and cancellations
 
-ArogyaCare is a web-based SaaS platform that connects three groups on one platform:
+## Tech stack
 
-- **Patients**: find doctors, check availability, book appointments, view prescriptions
-- **Doctors**: manage schedules, view appointments, manage patients, add prescriptions
-- **Hospital Admins**: manage doctors and schedules, monitor operations, view analytics
+Next.js, React, TypeScript, Tailwind CSS, PostgreSQL, Prisma
 
-## Tech Stack
+## Run it locally
 
-- Next.js (React, TypeScript)
-- Tailwind CSS
-- PostgreSQL with Prisma
-- Email notifications
-- Payment gateway (Razorpay / Stripe), planned
-
-## Getting Started
-
-```bash
-git clone https://github.com/Shruti-138/arogyacare.git
-cd arogyacare
-npm install
-npm run dev
-```
-
-Open http://localhost:3000 in your browser.
-
-## Roadmap
-
-- [x] Project setup
-- [ ] Database setup
-- [ ] Authentication and roles
-- [ ] Doctor availability and appointment booking
-- [ ] Dashboards, prescriptions and notifications
-- [ ] Deployment
+1. Install Node.js and PostgreSQL
+2. Run `npm install`
+3. Create a `.env` file with `DATABASE_URL` and `SESSION_SECRET`
+4. Run `npx prisma migrate dev`
+5. Run `npx tsx prisma/seed.ts` to add sample data
+6. Run `npm run dev` and open http://localhost:3000
 
 ## Author
 
