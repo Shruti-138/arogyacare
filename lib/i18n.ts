@@ -1,4 +1,4 @@
-﻿import { cookies } from "next/headers";
+import { cookies } from "next/headers";
 import { common } from "./messages/common";
 import { home } from "./messages/home";
 import { landing } from "./messages/landing";
@@ -7,6 +7,7 @@ import { sections2 } from "./messages/sections2";
 import { sections3 } from "./messages/sections3";
 import { design } from "./messages/design";
 import { pages8 } from "./messages/pages8";
+import { features2 } from "./messages/features2";
 
 export const LOCALES = [
   { code: "en", label: "English" },
@@ -27,6 +28,7 @@ const messages = {
   ...sections3,
   ...design,
   ...pages8,
+  ...features2,
 };
 
 export type MessageKey = keyof typeof messages;

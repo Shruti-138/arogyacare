@@ -1,20 +1,26 @@
 ﻿import {
+  Bell,
   CalendarCheck,
   FileText,
+  FlaskConical,
   LayoutDashboard,
   Lock,
   Mail,
   Search,
+  Video,
 } from "lucide-react";
 import { getT } from "../../lib/i18n";
 
 const FEATURES = [
-  { Icon: Search, title: "f1_title", desc: "f1_desc" },
-  { Icon: CalendarCheck, title: "f2_title", desc: "f2_desc" },
-  { Icon: FileText, title: "f3_title", desc: "f3_desc" },
-  { Icon: LayoutDashboard, title: "f4_title", desc: "f4_desc" },
-  { Icon: Mail, title: "f5_title", desc: "f5_desc" },
-  { Icon: Lock, title: "f6_title", desc: "f6_desc" },
+  { Icon: Search, title: "f1_title", desc: "f1_desc", soon: false },
+  { Icon: CalendarCheck, title: "f2_title", desc: "f2_desc", soon: false },
+  { Icon: Video, title: "consult_title", desc: "consult_desc", soon: false },
+  { Icon: FileText, title: "f3_title", desc: "f3_desc", soon: false },
+  { Icon: FlaskConical, title: "smartlab_title", desc: "lab_desc", soon: false },
+  { Icon: LayoutDashboard, title: "f4_title", desc: "f4_desc", soon: false },
+  { Icon: Mail, title: "f5_title", desc: "f5_desc", soon: false },
+  { Icon: Bell, title: "soon_3_title", desc: "soon_3_desc", soon: true },
+  { Icon: Lock, title: "f6_title", desc: "f6_desc", soon: false },
 ] as const;
 
 export default async function Features() {
@@ -34,12 +40,23 @@ export default async function Features() {
         </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map(({ Icon, title, desc }) => (
+          {FEATURES.map(({ Icon, title, desc, soon }) => (
             <div
               key={title}
-              className="rounded-3xl bg-gradient-to-br from-white to-[#f3fbf9] p-8 shadow-sm ring-1 ring-slate-100 transition hover:-translate-y-1 hover:shadow-xl hover:ring-[#0fa596]/40"
+              className="relative rounded-3xl bg-gradient-to-br from-white to-[#f3fbf9] p-8 shadow-sm ring-1 ring-slate-100 transition hover:-translate-y-1 hover:shadow-xl hover:ring-[#0fa596]/40"
             >
-              <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#d5f1ec] text-[#0d8f82]">
+              {soon && (
+                <span className="absolute right-6 top-6 rounded-full bg-[#e3eefa] px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#0a3a7a]">
+                  {t("soon_badge")}
+                </span>
+              )}
+              <span
+                className={
+                  soon
+                    ? "flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#0fa596] to-[#0a4a8a] text-white shadow-md"
+                    : "flex h-16 w-16 items-center justify-center rounded-2xl bg-[#d5f1ec] text-[#0d8f82]"
+                }
+              >
                 <Icon className="h-8 w-8" />
               </span>
               <h3 className="mt-6 text-2xl font-extrabold text-[#0a1f44]">
