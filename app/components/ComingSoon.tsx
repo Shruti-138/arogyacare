@@ -1,10 +1,10 @@
-import { Bell, FlaskConical, Video } from "lucide-react";
+﻿import { Bell, CreditCard, Smartphone } from "lucide-react";
 import { getT } from "../../lib/i18n";
 
 const SOON = [
-  { Icon: Video, title: "consult_title", desc: "consult_desc" },
-  { Icon: FlaskConical, title: "smartlab_title", desc: "lab_desc" },
   { Icon: Bell, title: "soon_3_title", desc: "soon_3_desc" },
+  { Icon: CreditCard, title: "soon_pay_title", desc: "soon_pay_desc" },
+  { Icon: Smartphone, title: "soon_app_title", desc: "soon_app_desc" },
 ] as const;
 
 export default async function ComingSoon() {
