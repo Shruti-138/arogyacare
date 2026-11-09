@@ -1,5 +1,4 @@
 ﻿import { Suspense } from "react";
-import ComingSoon from "./components/ComingSoon";
 import Features from "./components/Features";
 import Hero from "./components/Hero";
 import Hospitals from "./components/Hospitals";
@@ -15,7 +14,6 @@ export default function Home() {
         <Network />
         <HowItWorks />
         <Features />
-        <ComingSoon />
         <Specialties />
         <Hospitals />
       </Suspense>
