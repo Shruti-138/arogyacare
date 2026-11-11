@@ -5,6 +5,7 @@ import { pages3 } from "../../lib/messages/pages3";
 import AuthShell from "../components/AuthShell";
 import LoginForm from "./LoginForm";
 
+// Login page: renders the localized sign-in form inside AuthShell
 async function LoginContent() {
   const locale = await getLocale();
   const tr = (k: keyof typeof pages3) => pages3[k][locale];
@@ -34,6 +35,7 @@ async function LoginContent() {
   );
 }
 
+// Suspense shows a blank themed background while the locale loads
 export default function LoginPage() {
   return (
     <Suspense fallback={<div className="min-h-screen bg-[#eaf7f5]" />}>
