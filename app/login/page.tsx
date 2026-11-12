@@ -35,10 +35,16 @@ async function LoginContent() {
   );
 }
 
-// Suspense shows a blank themed background while the locale loads
+// Suspense shows a themed spinner while the locale loads
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#eaf7f5]" />}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#eaf7f5] flex items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#0d8f82] border-t-transparent" />
+        </div>
+      }
+    >
       <LoginContent />
     </Suspense>
   );
