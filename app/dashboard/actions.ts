@@ -4,20 +4,32 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "../../lib/prisma";
 import { getSession } from "../../lib/session";
 
-export async function completeAppointment(formData: FormData): Promise<void> {
-  const id = String(formData.get("appointmentId") ?? "");
+// Validation limits for prescriptions (not exported: "use server" files may only export async functions)
+const MEDICINES_MIN = 2;
+const MEDICINES_MAX = 2000;
+const NOTES_MAX = 1000;
 
+// Returns the logged-in doctor's id, or null if the user isn't a doctor
+async function getCurrentDoctorId(): Promise<string | null> {
   const session = await getSession();
-  if (!session || session.role !== "DOCTOR") return;
+  if (!session || session.role !== "DOCTOR") return null;
 
   const doctor = await prisma.doctor.findUnique({
     where: { userId: session.userId },
     select: { id: true },
   });
-  if (!doctor) return;
+  return doctor?.id ?? null;
+}
+
+// Marks a pending or confirmed appointment as completed
+export async function completeAppointment(formData: FormData): Promise<void> {
+  const id = String(formData.get("appointmentId") ?? "");
+
+  const doctorId = await getCurrentDoctorId();
+  if (!doctorId) return;
 
   const appointment = await prisma.appointment.findFirst({
-    where: { id, doctorId: doctor.id },
+    where: { id, doctorId },
     select: { id: true, status: true },
   });
   if (!appointment) return;
@@ -33,26 +45,25 @@ export async function completeAppointment(formData: FormData): Promise<void> {
   revalidatePath("/dashboard");
 }
 
+// Saves a prescription for a completed appointment
 export async function savePrescription(formData: FormData): Promise<void> {
   const id = String(formData.get("appointmentId") ?? "");
   const medicines = String(formData.get("medicines") ?? "").trim();
   const notes = String(formData.get("notes") ?? "").trim();
 
-  if (medicines.length < 2 || medicines.length > 2000 || notes.length > 1000) {
+  if (
+    medicines.length < MEDICINES_MIN ||
+    medicines.length > MEDICINES_MAX ||
+    notes.length > NOTES_MAX
+  ) {
     return;
   }
 
-  const session = await getSession();
-  if (!session || session.role !== "DOCTOR") return;
-
-  const doctor = await prisma.doctor.findUnique({
-    where: { userId: session.userId },
-    select: { id: true },
-  });
-  if (!doctor) return;
+  const doctorId = await getCurrentDoctorId();
+  if (!doctorId) return;
 
   const appointment = await prisma.appointment.findFirst({
-    where: { id, doctorId: doctor.id },
+    where: { id, doctorId },
     select: { id: true, status: true, patientId: true },
   });
   if (!appointment || appointment.status !== "COMPLETED") return;
@@ -63,7 +74,7 @@ export async function savePrescription(formData: FormData): Promise<void> {
         medicines,
         notes: notes || null,
         appointmentId: appointment.id,
-        doctorId: doctor.id,
+        doctorId,
         patientId: appointment.patientId,
       },
     });
