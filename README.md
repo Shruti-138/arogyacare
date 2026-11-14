@@ -14,15 +14,6 @@
 
 Next.js, React, TypeScript, Tailwind CSS, PostgreSQL, Prisma
 
-## Run it locally
-
-1. Install Node.js and PostgreSQL
-2. Run `npm install`
-3. Create a `.env` file with `DATABASE_URL` and `SESSION_SECRET`
-4. Run `npx prisma migrate dev`
-5. Run `npx tsx prisma/seed.ts` to add sample data
-6. Run `npm run dev` and open http://localhost:3000
-
 ## Author
 
 Shruti Sharma
