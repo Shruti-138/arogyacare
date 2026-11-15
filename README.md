@@ -49,6 +49,40 @@ These links work on your own computer while `npm run dev` is running.
 | Admin dashboard | Hospital admins | [localhost:3000/admin](http://localhost:3000/admin) |
 | Add a doctor | Hospital admins | [localhost:3000/admin/doctors/new](http://localhost:3000/admin/doctors/new) |
 | Database check | Developers | [localhost:3000/api/health](http://localhost:3000/api/health) |
+## Sample accounts
+
+Running `npx tsx prisma/seed.ts` creates these accounts for local testing. All of them use the password `Password@123`.
+
+| Email | Role |
+|---|---|
+| admin@arogyacare.test | Hospital admin |
+| neha.sharma@arogyacare.test | Doctor (Cardiology) |
+| rahul.verma@arogyacare.test | Doctor (Dermatology) |
+| anil.mehta@arogyacare.test | Doctor (General Medicine) |
+| shruti@arogyacare.test | Patient |
+
+These accounts are for local development only. Never keep these passwords on a live website.
+
+## Project structure
+
+    arogyacare/
+    |-- app/                 Pages of the website
+    |   |-- components/      Header, footer, hero and other shared pieces
+    |   |-- doctors/         Doctor list and doctor profile with booking
+    |   |-- appointments/    Patient appointments
+    |   |-- prescriptions/   Patient prescriptions
+    |   |-- lab-reports/     Patient lab reports
+    |   |-- lab/             Doctors add lab reports
+    |   |-- dashboard/       Doctor dashboard
+    |   |-- admin/           Admin dashboard and add-doctor form
+    |   |-- login/           Sign in
+    |   |-- register/        Patient sign up
+    |   `-- api/health/      Database check
+    |-- lib/                 Database, sessions, email, video rooms and helpers
+    |   `-- messages/        English, Hindi and Punjabi text
+    |-- prisma/              Database schema, migrations and sample data
+    |-- public/              Images
+    `-- README.md
 ## Author
 
 Shruti Sharma
