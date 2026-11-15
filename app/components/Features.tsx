@@ -1,4 +1,4 @@
-﻿import {
+import {
   Bell,
   CalendarCheck,
   FileText,
@@ -19,7 +19,7 @@ const FEATURES = [
   { Icon: FlaskConical, title: "smartlab_title", desc: "lab_desc", soon: false },
   { Icon: LayoutDashboard, title: "f4_title", desc: "f4_desc", soon: false },
   { Icon: Mail, title: "f5_title", desc: "f5_desc", soon: false },
-  { Icon: Bell, title: "soon_3_title", desc: "soon_3_desc", soon: true },
+  { Icon: Bell, title: "soon_3_title", desc: "soon_3_desc", soon: false },
   { Icon: Lock, title: "f6_title", desc: "f6_desc", soon: false },
 ] as const;
 
