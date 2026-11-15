@@ -31,6 +31,24 @@ Create a `.env` file in the project folder (copy `.env.example` and fill in your
     npm run dev
 
 Open **[http://localhost:3000](http://localhost:3000)** in your browser. This link works on your own computer while `npm run dev` is running.
+## Pages
+
+These links work on your own computer while `npm run dev` is running.
+
+| Page | Who can use it | Link |
+|---|---|---|
+| Home | Everyone | [localhost:3000](http://localhost:3000) |
+| Find a Doctor | Everyone | [localhost:3000/doctors](http://localhost:3000/doctors) |
+| Sign in | Everyone | [localhost:3000/login](http://localhost:3000/login) |
+| Register | New patients | [localhost:3000/register](http://localhost:3000/register) |
+| My appointments | Patients | [localhost:3000/appointments](http://localhost:3000/appointments) |
+| Prescriptions | Patients | [localhost:3000/prescriptions](http://localhost:3000/prescriptions) |
+| Lab reports | Patients | [localhost:3000/lab-reports](http://localhost:3000/lab-reports) |
+| Doctor dashboard | Doctors | [localhost:3000/dashboard](http://localhost:3000/dashboard) |
+| Add lab reports | Doctors | [localhost:3000/lab](http://localhost:3000/lab) |
+| Admin dashboard | Hospital admins | [localhost:3000/admin](http://localhost:3000/admin) |
+| Add a doctor | Hospital admins | [localhost:3000/admin/doctors/new](http://localhost:3000/admin/doctors/new) |
+| Database check | Developers | [localhost:3000/api/health](http://localhost:3000/api/health) |
 ## Author
 
 Shruti Sharma
