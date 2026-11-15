@@ -1,5 +1,7 @@
 # ArogyaCare
 
+![CI](https://github.com/Shruti-138/arogyacare/actions/workflows/ci.yml/badge.svg)
+
 **Care That Connects** - a smart hospital appointment and patient management platform.
 
 ## Features
