@@ -83,6 +83,24 @@ These accounts are for local development only. Never keep these passwords on a l
     |-- prisma/              Database schema, migrations and sample data
     |-- public/              Images
     `-- README.md
+## Environment settings
+
+The project reads these settings from a `.env` file. That file holds secrets, so it is never uploaded to GitHub. Copy `.env.example` to `.env` and fill in your own values.
+
+| Setting | Required | What it is |
+|---|---|---|
+| `DATABASE_URL` | Yes | Link to your PostgreSQL database |
+| `SESSION_SECRET` | Yes | Long random text used to sign login cookies |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | No | Email server settings. Without them, emails are printed in the terminal instead of being sent |
+| `MAIL_FROM` | No | The "from" address used in emails |
+
+Make a random `SESSION_SECRET` with:
+
+    node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+## Live demo
+
+The website has not been deployed yet. A public link will be added here after deployment.
 ## Author
 
 Shruti Sharma
