@@ -1,10 +1,12 @@
-﻿"use server";
+"use server";
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "../../lib/prisma";
 import { sendMail } from "../../lib/mail";
 import { getSession } from "../../lib/session";
 import { parseResults } from "../../lib/lab";
+import { bookMsgs } from "../../lib/messages/errors";
+import { mails } from "../../lib/messages/mails";
 
 export type LabState = {
   error?: "forbidden" | "test" | "results" | "notes" | "failed";
@@ -61,17 +63,28 @@ export async function addLabReport(
     return { error: "failed" };
   }
 
+  const langs = ["en", "hi", "pa"] as const;
+  const patientName = appointment.patient.user.name;
+  const body = langs
+    .map((lc) =>
+      [
+        bookMsgs.m_hello[lc].replace("{name}", patientName),
+        "",
+        mails.l_body[lc]
+          .replace("{doctor}", doctor.user.name)
+          .replace("{test}", testName),
+        mails.l_open[lc],
+      ].join("\n")
+    )
+    .join("\n\n----------\n\n");
+
   await sendMail({
     to: appointment.patient.user.email,
-    subject: `Your lab report is ready: ${testName}`,
-    text: [
-      `Hello ${appointment.patient.user.name},`,
-      "",
-      `${doctor.user.name} has added a lab report to your account: ${testName}.`,
-      "Sign in and open Lab reports to read it.",
-      "",
-      "ArogyaCare - Care That Connects",
-    ].join("\n"),
+    subject:
+      mails.l_subject.en.replace("{test}", testName) +
+      " | " +
+      mails.l_subject.hi.replace("{test}", testName),
+    text: body + "\n\nArogyaCare - Care That Connects",
   });
 
   revalidatePath("/lab");

@@ -1,12 +1,17 @@
-"use server";
+﻿"use server";
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "../../lib/prisma";
 import { sendMail } from "../../lib/mail";
 import { getSession } from "../../lib/session";
+import { getLocale } from "../../lib/i18n";
 import { TZ, formatTime, timeOf } from "../../lib/slots";
+import { dayLabel } from "../../lib/dates";
+import { bookMsgs } from "../../lib/messages/errors";
+import { mails } from "../../lib/messages/mails";
 
 export async function cancelAppointment(formData: FormData): Promise<void> {
+  const locale = await getLocale();
   const id = String(formData.get("appointmentId") ?? "");
 
   const session = await getSession();
@@ -39,26 +44,27 @@ export async function cancelAppointment(formData: FormData): Promise<void> {
     return;
   }
 
-  const day = appointment.startsAt.toLocaleDateString("en-IN", {
-    timeZone: TZ,
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-  });
+  const date = appointment.startsAt.toLocaleDateString("en-CA", { timeZone: TZ });
 
   await sendMail({
     to: appointment.patient.user.email,
-    subject: `Appointment cancelled with ${appointment.doctor.user.name}`,
+    subject: mails.c_subject[locale].replace(
+      "{doctor}",
+      appointment.doctor.user.name
+    ),
     text: [
-      `Hello ${appointment.patient.user.name},`,
+      bookMsgs.m_hello[locale].replace("{name}", appointment.patient.user.name),
       "",
-      "Your appointment has been cancelled.",
+      mails.c_body[locale],
       "",
-      `Doctor: ${appointment.doctor.user.name}`,
-      `Date:   ${day}`,
-      `Time:   ${formatTime(timeOf(appointment.startsAt))} (IST)`,
+      bookMsgs.m_doctor[locale] + ": " + appointment.doctor.user.name,
+      bookMsgs.m_date[locale] + ": " + dayLabel(date, locale),
+      bookMsgs.m_time[locale] +
+        ": " +
+        formatTime(timeOf(appointment.startsAt)) +
+        " (IST)",
       "",
-      "You can book a new appointment any time.",
+      mails.c_again[locale],
       "",
       "ArogyaCare - Care That Connects",
     ].join("\n"),
