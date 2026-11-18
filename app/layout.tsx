@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import "./globals.css";
 import Header from "./components/Header";
+import Reminders from "./components/Reminders";
 
 export const metadata: Metadata = {
   title: "ArogyaCare",
@@ -20,6 +21,9 @@ export default function RootLayout({
           fallback={<div className="h-14 border-b border-gray-200 bg-white" />}
         >
           <Header />
+        </Suspense>
+        <Suspense fallback={null}>
+          <Reminders />
         </Suspense>
         {children}
       </body>
