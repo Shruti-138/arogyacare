@@ -106,3 +106,9 @@ The website has not been deployed yet. A public link will be added here after de
 ## Author
 
 Shruti Sharma
+
+## Tests and CI
+
+- Run the unit tests with `npm test` (Vitest). They cover the lab result flags and the appointment time slots.
+- Check types with `npx tsc --noEmit` and build with `npm run build`.
+- Every push to `main` runs these checks on GitHub Actions. The status badge at the top of this file shows the result.
