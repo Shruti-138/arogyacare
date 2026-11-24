@@ -7,6 +7,7 @@ import { sections2 } from "./messages/sections2";
 import { sections3 } from "./messages/sections3";
 import { design } from "./messages/design";
 import { pages8 } from "./messages/pages8";
+import { pages9 } from "./messages/pages9";
 import { features2 } from "./messages/features2";
 
 export const LOCALES = [
@@ -28,6 +29,7 @@ const messages = {
   ...sections3,
   ...design,
   ...pages8,
+  ...pages9,
   ...features2,
 };
 

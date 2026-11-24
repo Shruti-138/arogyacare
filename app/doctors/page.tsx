@@ -1,20 +1,25 @@
 ﻿import { Suspense } from "react";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Building2, Search } from "lucide-react";
 import { prisma } from "../../lib/prisma";
 import { getLocale } from "../../lib/i18n";
 import { pages } from "../../lib/messages/pages";
+import { pages10 } from "../../lib/messages/pages10";
 import { specialtyNames } from "../../lib/messages/home";
 import DoctorCard from "../components/DoctorCard";
 
-type SearchParams = Promise<{ q?: string; specialty?: string }>;
+type SearchParams = Promise<{
+  q?: string;
+  specialty?: string;
+  hospital?: string;
+}>;
 
 async function DoctorsContent({ searchParams }: { searchParams: SearchParams }) {
   const locale = await getLocale();
   const tr = (k: keyof typeof pages) => pages[k][locale];
   const spec = (s: string) => specialtyNames[s]?.[locale] ?? s;
 
-  const { q, specialty } = await searchParams;
+  const { q, specialty, hospital } = await searchParams;
   const query = (q ?? "").trim();
 
   const specialtyRows = await prisma.doctor.findMany({
@@ -23,9 +28,18 @@ async function DoctorsContent({ searchParams }: { searchParams: SearchParams }) 
     orderBy: { specialty: "asc" },
   });
 
+  const hospitals = await prisma.hospital.findMany({
+    select: { id: true, name: true, city: true },
+    orderBy: { name: "asc" },
+  });
+  const activeHospital = hospital
+    ? hospitals.find((h) => h.id === hospital)
+    : undefined;
+
   const doctors = await prisma.doctor.findMany({
     where: {
       ...(specialty ? { specialty } : {}),
+      ...(activeHospital ? { hospitalId: activeHospital.id } : {}),
       ...(query
         ? {
             OR: [
@@ -44,6 +58,9 @@ async function DoctorsContent({ searchParams }: { searchParams: SearchParams }) 
     },
     orderBy: { user: { name: "asc" } },
   });
+
+  const select =
+    "rounded-2xl bg-[#eaf7f5] px-4 py-3 text-base font-medium text-[#0a1f44] outline-none";
 
   return (
     <>
@@ -72,9 +89,22 @@ async function DoctorsContent({ searchParams }: { searchParams: SearchParams }) 
               />
             </div>
             <select
+              name="hospital"
+              defaultValue={activeHospital?.id ?? ""}
+              className={select}
+            >
+              <option value="">{pages10.all_hosp[locale]}</option>
+              {hospitals.map((h) => (
+                <option key={h.id} value={h.id}>
+                  {h.name}
+                  {h.city ? `, ${h.city}` : ""}
+                </option>
+              ))}
+            </select>
+            <select
               name="specialty"
               defaultValue={specialty ?? ""}
-              className="rounded-2xl bg-[#eaf7f5] px-4 py-3 text-base font-medium text-[#0a1f44] outline-none"
+              className={select}
             >
               <option value="">{tr("all_spec")}</option>
               {specialtyRows.map((row) => (
@@ -89,7 +119,7 @@ async function DoctorsContent({ searchParams }: { searchParams: SearchParams }) 
             >
               {tr("search_btn")}
             </button>
-            {(query || specialty) && (
+            {(query || specialty || activeHospital) && (
               <Link
                 href="/doctors"
                 className="px-3 text-sm font-semibold text-[#0d8f82] underline"
@@ -102,9 +132,18 @@ async function DoctorsContent({ searchParams }: { searchParams: SearchParams }) 
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-        <h2 className="text-2xl font-extrabold text-[#0a1f44]">
-          {tr("available")} ({doctors.length})
-        </h2>
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 className="text-2xl font-extrabold text-[#0a1f44]">
+            {tr("available")} ({doctors.length})
+          </h2>
+          {activeHospital && (
+            <span className="inline-flex items-center gap-2 rounded-full bg-[#d5f1ec] px-4 py-1.5 text-sm font-bold text-[#0d8f82]">
+              <Building2 className="h-4 w-4" />
+              {activeHospital.name}
+              {activeHospital.city ? `, ${activeHospital.city}` : ""}
+            </span>
+          )}
+        </div>
 
         {doctors.length === 0 ? (
           <p className="mt-6 rounded-2xl bg-white p-6 text-slate-500 shadow-sm ring-1 ring-slate-100">

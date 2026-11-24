@@ -19,7 +19,10 @@ export default async function Header() {
       })
     : null;
 
-  const links = [{ href: "/doctors", label: t("nav_doctors") }];
+  const links = [
+    { href: "/doctors", label: t("nav_doctors") },
+    { href: "/hospitals", label: t("nav_hospitals") },
+  ];
   if (!user) {
     links.push(
       { href: "/#how-it-works", label: t("hiw_badge") },
