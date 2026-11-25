@@ -1,10 +1,11 @@
-﻿import { Suspense } from "react";
+import { Suspense } from "react";
 import Link from "next/link";
 import { Building2, Search } from "lucide-react";
 import { prisma } from "../../lib/prisma";
 import { getLocale } from "../../lib/i18n";
 import { pages } from "../../lib/messages/pages";
 import { pages10 } from "../../lib/messages/pages10";
+import { pages11 } from "../../lib/messages/pages11";
 import { specialtyNames } from "../../lib/messages/home";
 import DoctorCard from "../components/DoctorCard";
 
@@ -70,8 +71,8 @@ async function DoctorsContent({ searchParams }: { searchParams: SearchParams }) 
             {tr("doctors_title")}
           </h1>
           <p className="mt-3 max-w-2xl text-lg text-slate-500">
-            {tr("doctors_sub")}
-          </p>
+            {tr("doctors_sub")}</p>
+          <Link href="/enquiry" className="mt-5 inline-block rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#0a6a9a] shadow-md ring-1 ring-slate-100 hover:bg-slate-50">{pages11.enq_title[locale]}</Link>
 
           <form
             action="/doctors"
