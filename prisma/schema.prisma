@@ -26,25 +26,27 @@ enum AppointmentStatus {
 }
 
 model Hospital {
-  id        String   @id @default(cuid())
+  enquiries Enquiry[]
+  id        String    @id @default(cuid())
   name      String
   address   String?
   city      String?
   phone     String?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 
   doctors Doctor[]
   admins  User[]
 }
 
 model User {
-  id           String   @id @default(cuid())
+  enquiries    Enquiry[]
+  id           String    @id @default(cuid())
   name         String
-  email        String   @unique
+  email        String    @unique
   passwordHash String
-  role         Role     @default(PATIENT)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  role         Role      @default(PATIENT)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   hospitalId String?
   hospital   Hospital? @relation(fields: [hospitalId], references: [id])
@@ -54,6 +56,7 @@ model User {
 }
 
 model Doctor {
+  enquiries       Enquiry[]
   labReports      LabReport[]
   id              String      @id @default(cuid())
   specialty       String
@@ -152,4 +155,30 @@ model LabReport {
 
   patientId String
   patient   Patient @relation(fields: [patientId], references: [id])
+}
+
+model Enquiry {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  status    EnquiryStatus @default(NEW)
+  reply     String?
+  repliedAt DateTime?
+  createdAt DateTime      @default(now())
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  doctorId String?
+  doctor   Doctor? @relation(fields: [doctorId], references: [id])
+
+  hospitalId String?
+  hospital   Hospital? @relation(fields: [hospitalId], references: [id])
+}
+
+enum EnquiryStatus {
+  NEW
+  ANSWERED
 }
