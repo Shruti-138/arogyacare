@@ -22,6 +22,7 @@ export default async function Header() {
   const links = [
     { href: "/doctors", label: t("nav_doctors") },
     { href: "/hospitals", label: t("nav_hospitals") },
+    { href: "/receipts", label: t("nav_receipts") },
   ];
   if (!user) {
     links.push(
